@@ -19,6 +19,8 @@ public class SCR_Neuron : MonoBehaviour
 	public SCR_Neuron[] Previous = new SCR_Neuron[0];
 	public SCR_Neuron[] Next = new SCR_Neuron[0];
 
+	public float Current;
+
 	public void Awake()
 	{
 		Refresh();
@@ -28,8 +30,8 @@ public class SCR_Neuron : MonoBehaviour
 	{
 		for (int i = 0; i < Next.Length; i++) 
 		{
+			
 //			Next[i].Evaulate()
-//			Weights[i]
 		}
 	}
 
