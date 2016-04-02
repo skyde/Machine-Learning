@@ -9,6 +9,12 @@ public class NeuralNetworkLayer
 	public SCR_Neuron[] Neurons;
 }
 
+public struct GizmoData
+{
+	public Vector2 Position;
+	public float T;
+}
+
 public class SCR_NeuralNetwork2D : MonoBehaviour 
 {
 	public SCR_Neuron X;
@@ -68,8 +74,15 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 
 	public void Evaulate(Vector2 p)
 	{
-		X.Current = p.x;
-		Y.Current = p.y;
+		if(X)
+		{
+			X.Current = p.x;
+		}
+
+		if(Y)
+		{
+			Y.Current = p.y;
+		}
 
 		for (int l = 1; l < Layers.Length; l++) 
 		{
@@ -89,59 +102,54 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 		Refresh();
 	}
 
-	public static float MinA = float.MaxValue;
-	public static float MaxA = float.MinValue;
+	const int GizmoIterations = 32;
+	protected GizmoData[,] GizmoDatas = new GizmoData[GizmoIterations, GizmoIterations];
 
 	public void OnDrawGizmos()
 	{
-		const int iter = 32;
 		const float area = 10;
 
-		var size = (area / (iter - 1));
+		var size = (area / (GizmoIterations - 1));
 
-//		var minA = 0F;
-//		var maxA = 0F;
-
-//		print(MinA + " " + MaxA);
-
-		for (int x = 0; x < iter; x++)
+		for (int x = 0; x < GizmoIterations; x++)
 		{
-			var xPos = -(x / (1F - (float) iter)) * area;
+			var xPos = -(x / (1F - (float) GizmoIterations)) * area;
 
-			for (int y = 0; y < iter; y++)
+			for (int y = 0; y < GizmoIterations; y++)
 			{
-				var yPos = -(y / (1F - (float) iter)) * area;
+				var yPos = -(y / (1F - (float) GizmoIterations)) * area;
 
 				var p = new Vector2(xPos, yPos);
-
-				X.Current = xPos;
-				Y.Current = yPos;
 
 				Evaulate(p);
 
 				var t = OutputRed.Current;
 
-//				print(t);
-
-				if(t < MinA)
-				{
-					MinA = t;
-				}
-
-				if(t > MaxA)
-				{
-					MaxA = t;
-				}
-
-//				print(t);
-
-				Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(MinA, MaxA, t));
-
-				Gizmos.DrawWireCube(p, new Vector2(size, size));
+				GizmoDatas[x, y].Position = p;
+				GizmoDatas[x, y].T = t;
 			}
 		}
 
-//		MinA = minA;
-//		MaxA = maxA;
+		var min = float.MaxValue;
+		var max = float.MinValue;
+
+		foreach (var item in GizmoDatas) 
+		{
+			if(item.T < min)
+			{
+				min = item.T;
+			}
+			if(item.T > max)
+			{
+				max = item.T;
+			}
+		}
+
+		foreach (var item in GizmoDatas) 
+		{
+			Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(min, max, item.T));
+
+			Gizmos.DrawWireCube(item.Position, new Vector2(size, size));
+		}
 	}
 }
