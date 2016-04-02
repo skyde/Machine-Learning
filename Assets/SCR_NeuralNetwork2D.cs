@@ -25,9 +25,9 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 
 	DATA_Point[] Points;
 
-//	public int NumLayers = 3;
-
 	public NeuralNetworkLayer[] Layers;
+
+	public float Step = 0.1F;
 
 	public void Awake()
 	{
@@ -63,13 +63,49 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 
 	public void Update () 
 	{
-		for (int p = 0; p < Points.Length; p++)
+		foreach (var layer in Layers)
 		{
-			var point = Points[p];
+			foreach (var neuron in layer.Neurons) 
+			{
+				{
+					var lastCost = TotalSquaredDistance();
+					var lastValue = neuron.Bias;
 
-//			point.transform.position
-//        	point.transform.position
+					neuron.Bias += (Random.value - 0.5F) * Step;
+
+					var newCost = TotalSquaredDistance();
+
+					if(newCost > lastCost)
+					{
+						neuron.Bias = lastValue;
+					}
+				}
+
+				for (int i = 0; i < neuron.PreviousWeights.Length; i++)
+				{
+					var lastCost = TotalSquaredDistance();
+					var lastValue = neuron.PreviousWeights[i];
+
+					neuron.PreviousWeights[i] += (Random.value - 0.5F) * Step;
+
+					var newCost = TotalSquaredDistance();
+
+					if(newCost > lastCost)
+					{
+						neuron.PreviousWeights[i] = lastValue;
+					}
+				}
+			}	
 		}
+//		for (int p = 0; p < Points.Length; p++)
+//		{
+//			var point = Points[p];
+//
+////			point.
+//
+////			point.transform.position
+////        	point.transform.position
+//		}
 	}
 
 	public float TotalSquaredDistance()
