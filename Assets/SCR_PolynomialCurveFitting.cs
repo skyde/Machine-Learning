@@ -27,6 +27,8 @@ public class SCR_PolynomialCurveFitting : MonoBehaviour
 
 		for (int i = 0; i < Constants.Length; i++) 
 		{
+			var t = i / (float) Constants.Length;
+
 			var dist = TotalDistanceSquared(Constants);
 
 			for (int c = 0; c < Constants.Length; c++) 
@@ -34,7 +36,7 @@ public class SCR_PolynomialCurveFitting : MonoBehaviour
 				constants[c] = Constants[c];
 			}
 
-			var newConstant = Constants[i] + (Random.value - 0.5F) * Step;
+			var newConstant = Constants[i] + (Random.value - 0.5F) * Step * (1F - t);
 
 			constants[i] = newConstant;
 
