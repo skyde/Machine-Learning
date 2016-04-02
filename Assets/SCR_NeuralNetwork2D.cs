@@ -72,7 +72,7 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 		}
 	}
 
-	public void Evaulate(Vector2 p)
+	public float Evaulate(Vector2 p)
 	{
 		if(X)
 		{
@@ -95,6 +95,8 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 				neuron.Evaulate();
 			}
 		}
+
+		return OutputRed.Current;
 	}
 
 	public void OnValidate()
@@ -121,9 +123,8 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 
 				var p = new Vector2(xPos, yPos);
 
-				Evaulate(p);
+				var t = Evaulate(p);
 
-				var t = OutputRed.Current;
 
 				GizmoDatas[x, y].Position = p;
 				GizmoDatas[x, y].T = t;
@@ -132,6 +133,8 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 
 		var min = float.MaxValue;
 		var max = float.MinValue;
+
+		print(min + " " + max);
 
 		foreach (var item in GizmoDatas) 
 		{
@@ -150,6 +153,31 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 			Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(min, max, item.T));
 
 			Gizmos.DrawWireCube(item.Position, new Vector2(size, size));
+		}
+
+
+		// Line
+		Gizmos.color = Color.white;
+
+		var iter = 128;
+		var last = Vector2.zero;
+
+		for (int i = 0; i < iter; i++) 
+		{
+			var t = i / (float) iter;
+
+			var x = t * 14;
+
+			var y = Evaulate(new Vector2(x, 0));
+
+			var p = new Vector2(x, y - 10);
+
+			if(i > 0)
+			{
+				Gizmos.DrawLine(last, p);
+			}
+
+			last = p;
 		}
 	}
 }
