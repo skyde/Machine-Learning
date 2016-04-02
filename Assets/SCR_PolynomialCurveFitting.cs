@@ -43,7 +43,7 @@ public class SCR_PolynomialCurveFitting : MonoBehaviour
 			var newDist = TotalDistanceSquared(constants);
 
 			if(Mathf.Abs(newDist) < Mathf.Abs(dist))
-			{
+			{ 
 				Constants[i] = newConstant;
 			}
 		}
@@ -76,8 +76,10 @@ public class SCR_PolynomialCurveFitting : MonoBehaviour
 
 		for (int i = 1; i < constants.Length; i++)
 		{
-			lineY += Mathf.Pow(x, i) * constants[i];
+			lineY += Mathf.Sin(x * i * 0.1F) * constants[i];
 		}
+
+		// y = b + x2 * k1 + x3 * k2
 
 		return new Vector2(x, lineY);
 	}
@@ -89,14 +91,14 @@ public class SCR_PolynomialCurveFitting : MonoBehaviour
 			return;
 		}
 
-		var iter = 128;
+		var iter = 1280;
 		var last = Vector2.zero;
 
 		for (int i = 0; i < iter; i++) 
 		{
 			var t = i / (float) iter;
 
-			var x = t * 14;
+			var x = t * 140;
 
 			var p = Evaluate(x, Constants);
 
