@@ -12,7 +12,7 @@ public class NeuralNetworkLayer
 public struct GizmoData
 {
 	public Vector2 Position;
-	public float T;
+	public Vector2 T;
 }
 
 public class SCR_NeuralNetwork2D : MonoBehaviour 
@@ -72,7 +72,28 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 		}
 	}
 
-	public float Evaulate(Vector2 p)
+	public float TotalSquaredDistance()
+	{
+		float total = 0;
+
+		foreach (var point in Points)
+		{
+			var v = Evaulate(point.transform.position);
+
+//			if(point.Type == PointType.Red)
+//			{
+//				t = -t;
+//			}
+
+			var t = point.Type == PointType.Red ? v.x : v.y;
+
+			total += t * t;
+		}
+
+		return total;
+	}
+
+	public Vector2 Evaulate(Vector2 p)
 	{
 		if(X)
 		{
@@ -96,7 +117,7 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 			}
 		}
 
-		return OutputRed.Current;
+		return new Vector2(OutputRed.Current, OutputBlue.Current);
 	}
 
 	public void OnValidate()
@@ -134,23 +155,23 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 		var min = float.MaxValue;
 		var max = float.MinValue;
 
-		print(min + " " + max);
+//		print(min + " " + max);
 
 		foreach (var item in GizmoDatas) 
 		{
-			if(item.T < min)
+			if(item.T.x < min)
 			{
-				min = item.T;
+				min = item.T.x;
 			}
-			if(item.T > max)
+			if(item.T.x > max)
 			{
-				max = item.T;
+				max = item.T.x;
 			}
 		}
 
 		foreach (var item in GizmoDatas) 
 		{
-			Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(min, max, item.T));
+			Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(min, max, item.T.x));
 
 			Gizmos.DrawWireCube(item.Position, new Vector2(size, size));
 		}
@@ -168,7 +189,7 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 
 			var x = t * 14;
 
-			var y = Evaulate(new Vector2(x, 0));
+			var y = Evaulate(new Vector2(x, 0)).x;
 
 			var p = new Vector2(x, y - 10);
 
