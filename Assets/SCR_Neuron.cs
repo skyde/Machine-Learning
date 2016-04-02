@@ -24,6 +24,18 @@ public class SCR_Neuron : MonoBehaviour
 		Refresh();
 	}
 
+	public void Update()
+	{
+
+	}
+
+	public float Sigmoid(float x, float weight, float b)
+	{
+		var v = weight * x + b;
+
+		return 1F / (1F + Mathf.Pow(2, -v));
+	}
+
 	public void Refresh()
 	{
 		var all = SCR_Neuron.FindObjectsOfType<SCR_Neuron>();
