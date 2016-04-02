@@ -13,7 +13,7 @@ public class SCR_Neuron : MonoBehaviour
 	public int Feature;
 	public int Layer;
 
-	public float Bias;
+	public float Bias = 0.1F;
 	public float[] PreviousWeights;
 	public SCR_Neuron[] Previous = new SCR_Neuron[0];
 
@@ -54,18 +54,27 @@ public class SCR_Neuron : MonoBehaviour
 
 		PreviousWeights = new float[Previous.Length];
 
+		for (int i = 0; i < PreviousWeights.Length; i++) 
+		{
+			PreviousWeights[i] = 0.1F;	
+		}
+
 		var x = Layer * 2 + 1;
 		var y = -Feature - 2;
 
 		transform.position = new Vector2(x, y);
 	}
 
+	bool hasValidated;
+
 	public void OnValidate()
 	{
-		if(Application.isPlaying)
+		if(Application.isPlaying || hasValidated)
 		{
 			return;
 		}
+
+		hasValidated = true;
 
 		Refresh();
 	}
