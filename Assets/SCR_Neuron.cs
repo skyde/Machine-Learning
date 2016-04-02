@@ -26,12 +26,16 @@ public class SCR_Neuron : MonoBehaviour
 
 	public void Evaulate()
 	{
+		var total = 0F;
+
 		for (int i = 0; i < Previous.Length; i++) 
 		{
 			var previous = Previous[i];
 
-			previous.Sigmoid(previous.Current, PreviousWeights[i], previous.Bias);
+			total += previous.Sigmoid(previous.Current, PreviousWeights[i], previous.Bias);
 		}
+
+		Current = total;
 	}
 
 	public float Sigmoid(float t, float weight, float b)

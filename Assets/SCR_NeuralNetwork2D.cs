@@ -25,6 +25,11 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 
 	public void Awake()
 	{
+		Refresh();
+	}
+
+	public void Refresh()
+	{
 		Points = GameObject.FindObjectsOfType<DATA_Point>();
 
 		var neurons = GameObject.FindObjectsOfType<SCR_Neuron>();
@@ -56,20 +61,87 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 		{
 			var point = Points[p];
 
-			X.Current = point.transform.position.x;
-			Y.Current = point.transform.position.y;
+//			point.transform.position
+//        	point.transform.position
+		}
+	}
 
-			for (int l = 1; l < Layers.Length; l++) 
+	public void Evaulate(Vector2 p)
+	{
+		X.Current = p.x;
+		Y.Current = p.y;
+
+		for (int l = 1; l < Layers.Length; l++) 
+		{
+			var layer = Layers[l];
+
+			for (int n = 0; n < layer.Neurons.Length; n++) 
 			{
-				var layer = Layers[l];
+				var neuron = layer.Neurons[n];
 
-				for (int n = 0; n < layer.Neurons.Length; n++) 
-				{
-					var neuron = layer.Neurons[n];
-
-					neuron.Evaulate();
-				}
+				neuron.Evaulate();
 			}
 		}
+	}
+
+	public void OnValidate()
+	{
+		Refresh();
+	}
+
+	public static float MinA = float.MaxValue;
+	public static float MaxA = float.MinValue;
+
+	public void OnDrawGizmos()
+	{
+		const int iter = 32;
+		const float area = 10;
+
+		var size = (area / (iter - 1));
+
+//		var minA = 0F;
+//		var maxA = 0F;
+
+//		print(MinA + " " + MaxA);
+
+		for (int x = 0; x < iter; x++)
+		{
+			var xPos = -(x / (1F - (float) iter)) * area;
+
+			for (int y = 0; y < iter; y++)
+			{
+				var yPos = -(y / (1F - (float) iter)) * area;
+
+				var p = new Vector2(xPos, yPos);
+
+				X.Current = xPos;
+				Y.Current = yPos;
+
+				Evaulate(p);
+
+				var t = OutputRed.Current;
+
+//				print(t);
+
+				if(t < MinA)
+				{
+					MinA = t;
+				}
+
+				if(t > MaxA)
+				{
+					MaxA = t;
+				}
+
+//				print(t);
+
+				Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(MinA, MaxA, t));
+
+				Gizmos.DrawWireCube(p, new Vector2(size, size));
+			}
+		}
+
+//		MinA = minA;
+//		MaxA = maxA;
 	}
 }
