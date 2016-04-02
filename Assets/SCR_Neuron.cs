@@ -14,10 +14,8 @@ public class SCR_Neuron : MonoBehaviour
 	public int Layer;
 
 	public float Bias;
-	public float[] Weights;
-
+	public float[] PreviousWeights;
 	public SCR_Neuron[] Previous = new SCR_Neuron[0];
-	public SCR_Neuron[] Next = new SCR_Neuron[0];
 
 	public float Current;
 
@@ -26,12 +24,13 @@ public class SCR_Neuron : MonoBehaviour
 		Refresh();
 	}
 
-	public void Evaulate(float t)
+	public void Evaulate()
 	{
-		for (int i = 0; i < Next.Length; i++) 
+		for (int i = 0; i < Previous.Length; i++) 
 		{
-			
-//			Next[i].Evaulate()
+			var previous = Previous[i];
+
+			previous.Sigmoid(previous.Current, PreviousWeights[i], previous.Bias);
 		}
 	}
 
@@ -47,9 +46,9 @@ public class SCR_Neuron : MonoBehaviour
 		var all = SCR_Neuron.FindObjectsOfType<SCR_Neuron>();
 
 		Previous = all.Where(_ => _.Layer == Layer - 1).ToArray();
-		Next = all.Where(_ => _.Layer == Layer + 1).ToArray();
+//		Next = all.Where(_ => _.Layer == Layer + 1).ToArray();
 
-		Weights = new float[Weights.Length];
+		PreviousWeights = new float[Previous.Length];
 
 		var x = Layer * 2 + 1;
 		var y = -Feature - 2;
@@ -73,7 +72,7 @@ public class SCR_Neuron : MonoBehaviour
 
 //		Gizmos.DrawWireSphere(transform.position, 0.25F);
 
-		foreach (var item in Next)
+		foreach (var item in Previous)
 		{
 			Gizmos.DrawLine(transform.position, item.transform.position);
 		}

@@ -59,10 +59,17 @@ public class SCR_NeuralNetwork2D : MonoBehaviour
 			X.Current = point.transform.position.x;
 			Y.Current = point.transform.position.y;
 
-//			for (int i = 0; i < Layers.Count; i++) 
-//			{
-//				
-//			}
+			for (int l = 1; l < Layers.Length; l++) 
+			{
+				var layer = Layers[l];
+
+				for (int n = 0; n < layer.Neurons.Length; n++) 
+				{
+					var neuron = layer.Neurons[n];
+
+					neuron.Evaulate();
+				}
+			}
 		}
 	}
 }
