@@ -1,27 +1,15 @@
-﻿//using UnityEngine;
-//using System.Collections;
-//using System.Collections.Generic;
-//using System.Linq;
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+public class SCR_NeuralNetwork1D : MonoBehaviour 
+{
+//	public SCR_Neuron Input;
+//	//	public SCR_Neuron Y;
 //
-//[System.Serializable]
-//public class NeuralNetworkLayer
-//{
-//	public SCR_Neuron[] Neurons;
-//}
-//
-//public struct GizmoData
-//{
-//	public Vector2 Position;
-//	public Vector2 T;
-//}
-//
-//public class SCR_NeuralNetwork2D : MonoBehaviour 
-//{
-//	public SCR_Neuron X;
-//	public SCR_Neuron Y;
-//
-//	public SCR_Neuron OutputRed;
-//	public SCR_Neuron OutputBlue;
+//	public SCR_Neuron Output;
+//	//	public SCR_Neuron OutputBlue;
 //
 //	DATA_Point[] Points;
 //
@@ -97,15 +85,15 @@
 //				}
 //			}	
 //		}
-////		for (int p = 0; p < Points.Length; p++)
-////		{
-////			var point = Points[p];
-////
-//////			point.
-////
-//////			point.transform.position
-//////        	point.transform.position
-////		}
+//		//		for (int p = 0; p < Points.Length; p++)
+//		//		{
+//		//			var point = Points[p];
+//		//
+//		////			point.
+//		//
+//		////			point.transform.position
+//		////        	point.transform.position
+//		//		}
 //	}
 //
 //	public float TotalSquaredDistance()
@@ -114,14 +102,14 @@
 //
 //		foreach (var point in Points)
 //		{
-//			var v = Evaulate(point.transform.position);
+//			var t = Evaulate(point.transform.position);
 //
-////			if(point.Type == PointType.Red)
-////			{
-////				t = -t;
-////			}
+//			//			if(point.Type == PointType.Red)
+//			//			{
+//			//				t = -t;
+//			//			}
 //
-//			var t = point.Type == PointType.Red ? v.x : v.y;
+//			//			var t = point.Type == PointType.Red ? v : v;
 //
 //			total += t * t;
 //		}
@@ -129,17 +117,9 @@
 //		return total;
 //	}
 //
-//	public Vector2 Evaulate(Vector2 p)
+//	public float Evaulate(Vector2 p)
 //	{
-//		if(X)
-//		{
-//			X.Current = p.x;
-//		}
-//
-//		if(Y)
-//		{
-//			Y.Current = p.y;
-//		}
+//		Input.Current = p.x;
 //
 //		for (int l = 1; l < Layers.Length; l++) 
 //		{
@@ -153,7 +133,7 @@
 //			}
 //		}
 //
-//		return new Vector2(OutputRed.Current, OutputBlue.Current);
+//		return Output.Current;//OutputBlue.Current);
 //	}
 //
 //	public void OnValidate()
@@ -166,68 +146,68 @@
 //
 //	public void OnDrawGizmos()
 //	{
-//		const float area = 10;
-//
-//		var size = (area / (GizmoIterations - 1));
-//
-//		for (int x = 0; x < GizmoIterations; x++)
-//		{
-//			var xPos = -(x / (1F - (float) GizmoIterations)) * area;
-//
-//			for (int y = 0; y < GizmoIterations; y++)
-//			{
-//				var yPos = -(y / (1F - (float) GizmoIterations)) * area;
-//
-//				var p = new Vector2(xPos, yPos);
-//
-//				var t = Evaulate(p);
-//
-//
-//				GizmoDatas[x, y].Position = p;
-//				GizmoDatas[x, y].T = t;
-//			}
-//		}
-//
-//		var min = float.MaxValue;
-//		var max = float.MinValue;
-//
-////		print(min + " " + max);
-//
-//		foreach (var item in GizmoDatas) 
-//		{
-//			if(item.T.x < min)
-//			{
-//				min = item.T.x;
-//			}
-//			if(item.T.x > max)
-//			{
-//				max = item.T.x;
-//			}
-//		}
-//
-//		foreach (var item in GizmoDatas) 
-//		{
-//			Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(min, max, item.T.x));
-//
-//			Gizmos.DrawWireCube(item.Position, new Vector2(size, size));
-//		}
-//
-//
-//		// Line
+//		//		const float area = 10;
+//		//
+//		//		var size = (area / (GizmoIterations - 1));
+//		//
+//		//		for (int x = 0; x < GizmoIterations; x++)
+//		//		{
+//		//			var xPos = -(x / (1F - (float) GizmoIterations)) * area;
+//		//
+//		//			for (int y = 0; y < GizmoIterations; y++)
+//		//			{
+//		//				var yPos = -(y / (1F - (float) GizmoIterations)) * area;
+//		//
+//		//				var p = new Vector2(xPos, yPos);
+//		//
+//		//				var t = Evaulate(p);
+//		//
+//		//
+//		//				GizmoDatas[x, y].Position = p;
+//		//				GizmoDatas[x, y].T = t;
+//		//			}
+//		//		}
+//		//
+//		//		var min = float.MaxValue;
+//		//		var max = float.MinValue;
+//		//
+//		////		print(min + " " + max);
+//		//
+//		//		foreach (var item in GizmoDatas) 
+//		//		{
+//		//			if(item.T.x < min)
+//		//			{
+//		//				min = item.T.x;
+//		//			}
+//		//			if(item.T.x > max)
+//		//			{
+//		//				max = item.T.x;
+//		//			}
+//		//		}
+//		//
+//		//		foreach (var item in GizmoDatas) 
+//		//		{
+//		//			Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(min, max, item.T.x));
+//		//
+//		//			Gizmos.DrawWireCube(item.Position, new Vector2(size, size));
+//		//		}
+//		//
+//		//
+//		//		// Line
 //		Gizmos.color = Color.white;
 //
-//		var iter = 128;
+//		var iter = 512;
 //		var last = Vector2.zero;
 //
 //		for (int i = 0; i < iter; i++) 
 //		{
 //			var t = i / (float) iter;
 //
-//			var x = t * 5;
+//			var x = t * 14;
 //
-//			var y = Evaulate(new Vector2(x, 0)).x;
+//			var y = Evaulate(new Vector2(x, 0));
 //
-//			var p = new Vector2(x, y - 10);
+//			var p = new Vector2(x, y);
 //
 //			if(i > 0)
 //			{
@@ -237,4 +217,4 @@
 //			last = p;
 //		}
 //	}
-//}
+}
