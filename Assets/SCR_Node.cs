@@ -3,53 +3,6 @@ using System.Collections;
 using System.Linq;
 
 [RequireComponent(typeof(TextMesh))]
-public class TextBase : MonoBehaviour
-{
-	public string Text
-	{
-		set
-		{
-			var text = GetComponent<TextMesh>();
-
-			if(text)
-			{
-				text.text = value;
-			}
-		}
-	}
-
-	public virtual float TextScale
-	{
-		get
-		{
-			return 1F;
-		}
-	}
-
-	public virtual void Reset()
-	{
-		RefreshText();
-	}
-
-	public virtual void OnValidate()
-	{
-		RefreshText();
-	}
-
-	void RefreshText()
-	{
-		var text = GetComponent<TextMesh>();
-
-		if(text)
-		{
-			text.anchor = TextAnchor.MiddleCenter;
-			text.fontSize = 128;
-			transform.localScale = new Vector3(0.02F * TextScale, 0.02F * TextScale, 1F);
-		}
-	}
-}
-
-[RequireComponent(typeof(TextMesh))]
 public abstract class SCR_Node : TextBase
 {
 	public float Value;
@@ -57,6 +10,11 @@ public abstract class SCR_Node : TextBase
 
 	public abstract float Forward();
 	public abstract float Backward();
+
+	public override string GetText ()
+	{
+		return Value.ToString();
+	}
 
 	public void OnDrawGizmos()
 	{

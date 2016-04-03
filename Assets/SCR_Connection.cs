@@ -20,6 +20,11 @@ public class SCR_Connection : TextBase
 	public float Value;
 	public float Gradient;
 
+	public override string GetText ()
+	{
+		return Value.ToString();
+	}
+
 	public override float TextScale
 	{
 		get
