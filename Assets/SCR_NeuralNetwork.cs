@@ -3,8 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class SCR_NeuralNetwork1D : MonoBehaviour 
+[System.Serializable]
+public class NetworkLayer
 {
+	public SCR_Node[] Nodes;
+}
+
+[ExecuteInEditMode]
+public class SCR_NeuralNetwork : MonoBehaviour 
+{
+	public NetworkLayer[] Layers;
+
+	public void Update()
+	{
+		foreach (var layer in Layers)
+		{
+			foreach (var node in layer.Nodes)
+			{
+				node.Value = node.Forward();	
+				node.TransformedValue = node.TransformOutput(node.Value);
+			}
+		}
+	}
 //	public SCR_Neuron Input;
 //	//	public SCR_Neuron Y;
 //

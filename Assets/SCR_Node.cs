@@ -1,19 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Linq;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(TextMesh))]
 public abstract class SCR_Node : TextBase
 {
 	public float Value;
+	public float TransformedValue;
 	public float Gradient;
+
+	public SCR_Connection[] NextConnections;
+	public SCR_Connection[] PreviousConnections;
 
 	public abstract float Forward();
 	public abstract float Backward();
 
+	public virtual float TransformOutput(float value)
+	{
+		return value;
+	}
+
+	public static float Sigmoid(float value)
+	{
+		return 1F / (1F + Mathf.Pow(2.71828F, -value));
+	}
+
 	public override string GetText ()
 	{
-		return Value.ToString();
+		if(Value == TransformedValue)
+		{
+			return Value.ToString();
+		}
+
+		return Value.ToString() + "\n" + TransformedValue.ToString();
 	}
 
 	public void OnDrawGizmos()
@@ -24,9 +44,19 @@ public abstract class SCR_Node : TextBase
 
 		Gizmos.color = new Color(0, 0, 0, 0);
 
-		Gizmos.DrawWireCube(transform.position, new Vector2(1, 1));
-
+		Gizmos.DrawCube(transform.position, new Vector2(1, 1));
 	}
+
+	public override void OnValidate()
+	{
+		base.OnValidate();
+
+		var connections = GameObject.FindObjectsOfType<SCR_Connection>();
+
+		NextConnections = connections.Where(_ => _.Previous == this).ToArray();
+		PreviousConnections = connections.Where(_ => _.Next == this).ToArray();
+	}
+
 
 //	public float Bias = 0.1F;
 //	public float[] PreviousWeights;

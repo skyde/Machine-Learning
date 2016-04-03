@@ -17,12 +17,12 @@ public class SCR_Connection : TextBase
 	public SCR_Node Next;
 
 //	public float Weight;
-	public float Value;
-	public float Gradient;
+	public float Weight = 0.5F;
+//	public float Gradient;
 
 	public override string GetText ()
 	{
-		return Value.ToString();
+		return Weight.ToString();
 	}
 
 	public override float TextScale
@@ -33,19 +33,25 @@ public class SCR_Connection : TextBase
 		}
 	}
 
-//	public abstract float Forward();
-//
-//	public abstract float Backward();
-
-	public void Update()
+	public override void Update()
 	{
+		base.Update();
+
 		if(!Previous || !Next)
 		{
 			return;
 		}
 
+//		ValidateNode(Previous);
+//		ValidateNode(Next);
+
 		transform.position = (Previous.transform.position + Next.transform.position) * 0.5F;
 	}
+
+//	public void ValidateNode(SCR_Node node)
+//	{
+//
+//	}
 
 	public void OnDrawGizmos()
 	{

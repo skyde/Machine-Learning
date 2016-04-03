@@ -14,7 +14,7 @@ public class SCR_NodeData : SCR_Node
 
 	public override float Forward ()
 	{
-		return 0;
+		return Value;
 	}
 
 	public override float Backward ()
