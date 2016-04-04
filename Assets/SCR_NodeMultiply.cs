@@ -17,7 +17,7 @@ public class SCR_NodeMultiply : SCR_Node
 
 		for (int i = 0; i < PreviousConnections.Length; i++)
 		{
-			total += PreviousConnections[i].Previous.TransformedValue * PreviousConnections[i].Weight;
+			total += PreviousConnections[i].Previous.Activated * PreviousConnections[i].Weight;
 		}
 
 		return total;

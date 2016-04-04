@@ -16,8 +16,95 @@ public class SCR_NeuralNetwork : MonoBehaviour
     public SCR_Node Output;
 	public NetworkLayer[] Layers;
 
+	public float Step = 0.01F;
+
+	DATA_Point[] Points;
+	SCR_Node[] Nodes;
+	SCR_Connection[] Connections;
+
+	public void Awake()
+	{
+		Points = GameObject.FindObjectsOfType<DATA_Point>();
+		Nodes = GameObject.FindObjectsOfType<SCR_Node>();
+		Connections = GameObject.FindObjectsOfType<SCR_Connection>();
+
+		foreach (var item in Nodes) 
+		{
+			if(item is SCR_NodeMultiply)
+			{
+				var node = (SCR_NodeMultiply) item;
+
+				node.Bias = Random.value - 0.5F;
+			}
+		}
+
+		foreach (var item in Connections) 
+		{
+			item.Weight = Random.value - 0.5F;
+		}
+	}
+
 	public void Update()
 	{
+		if(!Application.isPlaying)
+		{
+			return;
+		}
+
+		foreach (var item in Nodes) 
+		{
+			if(item is SCR_NodeMultiply)
+			{
+				var node = (SCR_NodeMultiply) item;
+
+				var lastError = CaculateError();
+				var lastValue = node.Bias;
+
+				node.Bias += (Random.value - 0.5F) * Step;
+
+				if(CaculateError() > lastError)
+				{
+					node.Bias = lastValue;
+				}
+			}
+		}
+
+		foreach (var item in Connections) 
+		{
+			var lastError = CaculateError();
+			var lastValue = item.Weight;
+
+			item.Weight += (Random.value - 0.5F) * Step;
+
+			if(CaculateError() > lastError)
+			{
+				item.Weight = lastValue;
+			}
+		}
+
+//		foreach (var item in Points) {
+//			
+//		}
+	}
+
+	public float CaculateError()
+	{
+		var value = 0F;
+
+		foreach (var point in Points) 
+		{
+			var p = (Vector2) point.transform.position;
+
+			var y = Evaluate(p.x);
+
+			var error = p.y - y;
+
+			error *= error;
+
+			value += error;
+		}
+
+		return value;
 	}
 
     public float Evaluate(float x)
@@ -29,7 +116,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			foreach (var node in layer.Nodes)
 			{
 				node.Value = node.Forward();	
-				node.TransformedValue = node.TransformOutput(node.Value);
+				node.Activated = node.TransformOutput(node.Value);
 			}
 		}
 
@@ -38,6 +125,11 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public void OnDrawGizmos()
 	{
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawLine(Vector2.zero, new Vector2(100, 0));
+
+		Gizmos.color = Color.white;
+
 		var iter = 1280;
         var last = Vector2.zero;
 		

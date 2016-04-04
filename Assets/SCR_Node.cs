@@ -7,8 +7,8 @@ using System.Collections.Generic;
 public abstract class SCR_Node : TextBase
 {
 	public float Value;
-	public float TransformedValue;
-	public float Gradient;
+	public float Activated;
+//	public float Gradient;
 
 	public SCR_Connection[] NextConnections;
 	public SCR_Connection[] PreviousConnections;
@@ -28,12 +28,12 @@ public abstract class SCR_Node : TextBase
 
 	public override string GetText ()
 	{
-		if(Value == TransformedValue)
+		if(Value == Activated)
 		{
 			return Value.ToString();
 		}
 
-		return Value.ToString() + "\n" + TransformedValue.ToString();
+		return Value.ToString() + "\n" + Activated.ToString();
 	}
 
 	public void OnDrawGizmos()
