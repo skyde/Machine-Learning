@@ -45,7 +45,7 @@ public class SCR_Connection : TextBase
 //		ValidateNode(Previous);
 //		ValidateNode(Next);
 
-		transform.position = (Previous.transform.position + Next.transform.position) * 0.5F;
+		transform.position = Vector2.Lerp(Previous.transform.position, Next.transform.position, 0.333F);
 	}
 
 //	public void ValidateNode(SCR_Node node)
