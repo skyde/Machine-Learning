@@ -4,9 +4,11 @@ using System.Linq;
 
 public class SCR_NodeMultiply : SCR_Node
 {
+	public float Bias;
+
 	public override float TransformOutput (float value)
 	{
-		return Sigmoid(value);
+		return Sigmoid(value, Bias);
 	}
 
 	public override float Forward ()

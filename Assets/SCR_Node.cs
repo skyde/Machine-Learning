@@ -21,9 +21,9 @@ public abstract class SCR_Node : TextBase
 		return value;
 	}
 
-	public static float Sigmoid(float value)
+	public static float Sigmoid(float value, float bias)
 	{
-		return 1F / (1F + Mathf.Pow(2.71828F, -value));
+		return 1F / (1F + Mathf.Pow(2.71828F, -value + bias));
 	}
 
 	public override string GetText ()
