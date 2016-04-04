@@ -15,6 +15,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 {
     public SCR_Node Input;
     public SCR_Node Output;
+	public GameObject LayersBase;
 	public NetworkLayer[] Layers;
 
 	public float Step = 0.01F;
@@ -30,6 +31,22 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	{
 		Points = GameObject.FindObjectsOfType<DATA_Point>();
 		Nodes = GameObject.FindObjectsOfType<SCR_Node>();
+
+		Layers = new NetworkLayer[LayersBase.transform.childCount];
+
+		for (int i = 0; i < LayersBase.transform.childCount; i++) 
+		{
+			Layers[i] = new NetworkLayer();
+			
+			var c = LayersBase.transform.GetChild(i);
+
+			Layers[i].LayerBase = c.gameObject;
+			Layers[i].Nodes = Layers[i].LayerBase.GetComponentsInChildren<SCR_Node>();
+		}
+//		foreach (var layer in Layers) 
+//		{
+//			layer.Nodes = layer.LayerBase.GetComponentsInChildren<SCR_Node>();
+//		}
 
 		if(Application.isPlaying)
 		{
@@ -60,10 +77,6 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 		Connections = GameObject.FindObjectsOfType<SCR_Connection>();
 
-		foreach (var layer in Layers) 
-		{
-			layer.Nodes = layer.LayerBase.GetComponentsInChildren<SCR_Node>();
-		}
 
 		foreach (var item in Nodes) 
 		{
