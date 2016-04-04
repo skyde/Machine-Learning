@@ -6,6 +6,7 @@ using System.Linq;
 [System.Serializable]
 public class NetworkLayer
 {
+	public GameObject LayerBase;
 	public SCR_Node[] Nodes;
 }
 
@@ -17,6 +18,8 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	public NetworkLayer[] Layers;
 
 	public float Step = 0.01F;
+
+	public bool AutoFit = true;
 
 	DATA_Point[] Points;
 	SCR_Node[] Nodes;
@@ -46,7 +49,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public void Update()
 	{
-		if(!Application.isPlaying)
+		if(!Application.isPlaying || !AutoFit)
 		{
 			return;
 		}
