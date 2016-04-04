@@ -31,6 +31,11 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		Nodes = GameObject.FindObjectsOfType<SCR_Node>();
 		Connections = GameObject.FindObjectsOfType<SCR_Connection>();
 
+		foreach (var layer in Layers) 
+		{
+			layer.Nodes = layer.LayerBase.GetComponentsInChildren<SCR_Node>();
+		}
+
 		foreach (var item in Nodes) 
 		{
 			if(item is SCR_NodeMultiply)
