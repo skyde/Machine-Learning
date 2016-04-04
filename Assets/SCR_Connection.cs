@@ -22,7 +22,7 @@ public class SCR_Connection : TextBase
 
 	public override string GetText ()
 	{
-		return Weight.ToString();
+        return Weight.ToString("##.######");
 	}
 
 	public override float TextScale

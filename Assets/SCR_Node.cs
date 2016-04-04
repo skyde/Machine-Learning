@@ -36,6 +36,8 @@ public abstract class SCR_Node : TextBase
 
 	public static float Sigmoid(float value, float bias)
 	{
+//        return Mathf.Pow(2.71828F, value + bias);//value * value + bias;
+//        return Mathf.(value + bias);
 		return 1F / (1F + Mathf.Pow(2.71828F, -value + bias));
 	}
 
@@ -43,10 +45,10 @@ public abstract class SCR_Node : TextBase
 	{
 		if(Value == Activated)
 		{
-			return Value.ToString();
+            return Value.ToString("##.######");
 		}
 
-		return Value.ToString() + "\n" + Activated.ToString();
+        return Value.ToString("##.######") + "\n" + Activated.ToString("##.######");
 	}
 
 	public void OnDrawGizmos()
