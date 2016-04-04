@@ -18,6 +18,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	public NetworkLayer[] Layers;
 
 	public float Step = 0.01F;
+	public GameObject Connection;
 
 	public bool AutoFit = true;
 
@@ -29,6 +30,34 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	{
 		Points = GameObject.FindObjectsOfType<DATA_Point>();
 		Nodes = GameObject.FindObjectsOfType<SCR_Node>();
+
+		if(Application.isPlaying)
+		{
+			for (int i = 0; i < Layers.Length - 1; i++)
+			{
+				var currentLayer = Layers[i];
+				var nextLayer = Layers[i + 1];
+
+				for (int c = 0; c < currentLayer.Nodes.Length; c++)
+				{
+					for (int n = 0; n < nextLayer.Nodes.Length; n++)
+					{
+						var previous = currentLayer.Nodes[c];
+						var next = nextLayer.Nodes[n];
+
+						var obj = GameObject.Instantiate(Connection);
+
+						var connection = obj.GetComponent<SCR_Connection>();
+
+						connection.Previous = previous;
+						connection.Next = next;
+
+						obj.transform.parent = transform;
+					}
+				}
+			}
+		}
+
 		Connections = GameObject.FindObjectsOfType<SCR_Connection>();
 
 		foreach (var layer in Layers) 

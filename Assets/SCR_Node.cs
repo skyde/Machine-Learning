@@ -16,6 +16,19 @@ public abstract class SCR_Node : TextBase
 	public abstract float Forward();
 	public abstract float Backward();
 
+	public void Start()
+	{
+		Refresh();
+	}
+
+	public void Refresh()
+	{
+		var connections = GameObject.FindObjectsOfType<SCR_Connection>();
+
+		NextConnections = connections.Where(_ => _.Previous == this).ToArray();
+		PreviousConnections = connections.Where(_ => _.Next == this).ToArray();
+	}
+
 	public virtual float TransformOutput(float value)
 	{
 		return value;
@@ -51,10 +64,7 @@ public abstract class SCR_Node : TextBase
 	{
 		base.OnValidate();
 
-		var connections = GameObject.FindObjectsOfType<SCR_Connection>();
-
-		NextConnections = connections.Where(_ => _.Previous == this).ToArray();
-		PreviousConnections = connections.Where(_ => _.Next == this).ToArray();
+		Refresh();
 	}
 
 
