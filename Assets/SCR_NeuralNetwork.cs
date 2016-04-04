@@ -12,10 +12,18 @@ public class NetworkLayer
 [ExecuteInEditMode]
 public class SCR_NeuralNetwork : MonoBehaviour 
 {
+    public SCR_Node Input;
+    public SCR_Node Output;
 	public NetworkLayer[] Layers;
 
 	public void Update()
 	{
+	}
+
+    public float Evaluate(float x)
+	{
+        Input.Value = x;
+
 		foreach (var layer in Layers)
 		{
 			foreach (var node in layer.Nodes)
@@ -24,6 +32,35 @@ public class SCR_NeuralNetwork : MonoBehaviour
 				node.TransformedValue = node.TransformOutput(node.Value);
 			}
 		}
+
+        return Output.Value;
+	}
+
+	public void OnDrawGizmos()
+	{
+		var iter = 1280;
+        var last = Vector2.zero;
+		
+		for (int i = 0; i < iter; i++) 
+		{
+			var t = i / (float) iter;
+			
+			var x = t * 140;
+			
+			var y = Evaluate(x);
+
+            var p = new Vector2(x, y);
+			
+			if(i > 0)
+			{
+                Gizmos.DrawLine(last, p);
+			}
+			
+			last = p;
+		}
+		
+		
+		//		Gizmos.DrawLine(new Vector2(0, B), new Vector2(1000, B + M * 1000));
 	}
 //	public SCR_Neuron Input;
 //	//	public SCR_Neuron Y;
