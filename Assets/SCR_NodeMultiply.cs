@@ -6,7 +6,7 @@ public class SCR_NodeMultiply : SCR_Node
 {
 	public float Bias;
 
-	public override float TransformOutput (float value)
+	public override float Activation (float value)
 	{
 		return Sigmoid(value, Bias);
 	}

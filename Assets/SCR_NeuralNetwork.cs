@@ -165,8 +165,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		{
 			foreach (var node in layer.Nodes)
 			{
-				node.Value = node.Forward();	
-				node.Activated = node.TransformOutput(node.Value);
+				node.CaculateForward();
 			}
 		}
 

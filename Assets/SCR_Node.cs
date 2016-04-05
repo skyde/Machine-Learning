@@ -6,9 +6,15 @@ using System.Collections.Generic;
 [RequireComponent(typeof(TextMesh))]
 public abstract class SCR_Node : TextBase
 {
+	public enum ActivationFunction
+	{
+		PureLinear,
+		Sigmoid,
+	}
+
 	public float Value;
 	public float Activated;
-//	public float Gradient;
+	public float Gradient;
 
 	public SCR_Connection[] NextConnections;
 	public SCR_Connection[] PreviousConnections;
@@ -29,16 +35,39 @@ public abstract class SCR_Node : TextBase
 		PreviousConnections = connections.Where(_ => _.Next == this).ToArray();
 	}
 
-	public virtual float TransformOutput(float value)
+	public virtual float Activation(float value)
 	{
 		return value;
 	}
 
 	public static float Sigmoid(float value, float bias)
 	{
-//        return Mathf.Pow(2.71828F, value + bias);//value * value + bias;
-//        return Mathf.(value + bias);
+//		return Mathf.Sin(value + bias);// / (value * value);
+////		return (Mathf.Sqrt(value * value + 1F) - 1F) / 2F + value;
+//
+//		return Mathf.Sin(value + bias) / value;
+//		return Mathf.Pow(2.71828F, -(value * value) + bias);
+
+//		return 2F / (1F + Mathf.Pow(2.71828F, -2 * value + bias)) - 1F;
+//		return value / (1F + value + bias);
 		return 1F / (1F + Mathf.Pow(2.71828F, -value + bias));
+	}
+		
+	public float SigmoidBackward(float value, float bias)
+	{
+		return Activated * (1F - Activated);
+//		var s = Sigmoid(value);
+	}
+
+	public void CaculateForward()
+	{
+		Value = Forward();	
+		Activated = Activation(Value);
+	}
+
+	public void CaculateBackward()
+	{
+		Gradient = Backward();
 	}
 
 	public override string GetText ()
