@@ -78,15 +78,15 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		Connections = GameObject.FindObjectsOfType<SCR_Connection>();
 
 
-		foreach (var item in Nodes) 
-		{
-			if(item is SCR_NodeMultiply)
-			{
-				var node = (SCR_NodeMultiply) item;
-
-				node.Bias = Random.value - 0.5F;
-			}
-		}
+//		foreach (var item in Nodes) 
+//		{
+//			if(item is SCR_NodeMultiply)
+//			{
+//				var node = (SCR_NodeMultiply) item;
+//
+//				node.Bias = Random.value - 0.5F;
+//			}
+//		}
 
 		foreach (var item in Connections) 
 		{
@@ -101,11 +101,11 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			return;
 		}
 
-		foreach (var item in Nodes) 
+		foreach (var node in Nodes) 
 		{
-			if(item is SCR_NodeMultiply)
-			{
-				var node = (SCR_NodeMultiply) item;
+//			if(item is SCR_NodeMultiply)
+//			{
+//				var node = (SCR_NodeMultiply) item;
 
 				var lastError = CaculateError();
 				var lastValue = node.Bias;
@@ -116,7 +116,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 				{
 					node.Bias = lastValue;
 				}
-			}
+//			}
 		}
 
 		foreach (var item in Connections) 
@@ -159,17 +159,17 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
     public float Evaluate(float x)
 	{
-        Input.Value = x;
+        Input.Input = x;
 
 		foreach (var layer in Layers)
 		{
 			foreach (var node in layer.Nodes)
 			{
-				node.CaculateForward();
+				node.Forward();
 			}
 		}
 
-        return Output.Value;
+        return Output.Input;
 	}
 
 	public void OnDrawGizmos()
