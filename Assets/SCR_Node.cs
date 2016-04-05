@@ -16,20 +16,13 @@ public class SCR_Node : Unit
 
 	public float Bias;
 
+//	public float Input()
+//	{
+//
+//	}
+
 	public override void Forward()
 	{
-		if(PreviousConnections.Length > 0)
-		{
-			var input = 0F;
-
-			for (int i = 0; i < PreviousConnections.Length; i++)
-			{
-				input += PreviousConnections[i].Previous.Value * PreviousConnections[i].Weight;
-			}
-
-			Input = input;
-		}
-
 		switch (ActivateStyle) 
 		{
 		case ActivateFunctionStyle.Sigmoid:

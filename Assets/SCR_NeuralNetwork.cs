@@ -32,16 +32,20 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		Points = GameObject.FindObjectsOfType<DATA_Point>();
 		Nodes = GameObject.FindObjectsOfType<SCR_Node>();
 
-		Layers = new NetworkLayer[LayersBase.transform.childCount];
+		Layers = new NetworkLayer[LayersBase.transform.childCount * 2 - 1];
+
+		for (int i = 0; i < Layers.Length; i++) 
+		{
+			Layers[i] = new NetworkLayer();
+			Layers[i].Nodes = new SCR_Node[0];
+		}
 
 		for (int i = 0; i < LayersBase.transform.childCount; i++) 
 		{
-			Layers[i] = new NetworkLayer();
-			
 			var c = LayersBase.transform.GetChild(i);
 
-			Layers[i].LayerBase = c.gameObject;
-			Layers[i].Nodes = Layers[i].LayerBase.GetComponentsInChildren<SCR_Node>();
+			Layers[i * 2].LayerBase = c.gameObject;
+			Layers[i * 2].Nodes = Layers[i * 2].LayerBase.GetComponentsInChildren<SCR_Node>();
 		}
 //		foreach (var layer in Layers) 
 //		{
@@ -66,8 +70,11 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 						var connection = obj.GetComponent<SCR_Connection>();
 
-						connection.Previous = previous;
-						connection.Next = next;
+//						connection.PreviousUnits = new List<Unit>();
+//						connection.NextUnits = new Unit[1];
+
+						connection.PreviousUnits.Add(previous);
+						connection.NextUnits.Add(next);
 
 						obj.transform.parent = transform;
 					}
@@ -159,7 +166,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
     public float Evaluate(float x)
 	{
-        Input.Input = x;
+		Input.Value = x;
 
 		foreach (var layer in Layers)
 		{
@@ -169,7 +176,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			}
 		}
 
-        return Output.Input;
+		return Output.Value;
 	}
 
 	public void OnDrawGizmos()

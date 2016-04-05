@@ -2,23 +2,10 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 
-//public class Connection : MonoBehaviour
-//{
-//	public SCR_Neuron Source;
-//	public SCR_Neuron Target;
-//}
-
-//public class SCR_Multiply
-
-[ExecuteInEditMode]
-public class SCR_Connection : TextBase
+//[ExecuteInEditMode]
+public class SCR_Connection : Unit
 {
-	public SCR_Node Previous;
-	public SCR_Node Next;
-
-//	public float Weight;
 	public float Weight = 0.5F;
-//	public float Gradient;
 
 	public override string GetText ()
 	{
@@ -33,11 +20,39 @@ public class SCR_Connection : TextBase
 		}
 	}
 
+	public void Start()
+	{
+		foreach (var item in PreviousUnits) 
+		{
+			if(!item.NextUnits.Contains(this))
+			{
+				item.NextUnits.Add(this);
+			}
+		}
+
+		foreach (var item in NextUnits) 
+		{
+			if(!item.PreviousUnits.Contains(this))
+			{
+				item.PreviousUnits.Add(this);
+			}
+		}
+	}
+
+	public override void Forward ()
+	{
+		
+	}
+
+	public override void Backward ()
+	{
+	}
+
 	public override void Update()
 	{
 		base.Update();
 
-		if(!Previous || !Next)
+		if(PreviousUnits.Count() == 0 || NextUnits.Count == 0)
 		{
 			return;
 		}
@@ -45,7 +60,10 @@ public class SCR_Connection : TextBase
 //		ValidateNode(Previous);
 //		ValidateNode(Next);
 
-		transform.position = Vector2.Lerp(Previous.transform.position, Next.transform.position, 0.333F);
+		transform.position = Vector2.Lerp(
+			PreviousUnits[0].transform.position, 
+			NextUnits[0].transform.position, 
+			0.333F);
 	}
 
 //	public void ValidateNode(SCR_Node node)
@@ -55,14 +73,14 @@ public class SCR_Connection : TextBase
 
 	public void OnDrawGizmos()
 	{
-		if(!Previous || !Next)
+		if(PreviousUnits.Count == 0 || NextUnits.Count == 0)
 		{
 			return;
 		}
 
 		Gizmos.color = new Color(0, 0, 0, 1);
 
-		Gizmos.DrawLine(Previous.transform.position, Next.transform.position);
+		Gizmos.DrawLine(PreviousUnits[0].transform.position, NextUnits[0].transform.position);
 
 		Gizmos.color = new Color(0, 0, 0, 0);
 
@@ -70,7 +88,7 @@ public class SCR_Connection : TextBase
 		for (int i = 0; i < iter; i++) 
 		{
 			var t = i / (iter + 1F);
-			Gizmos.DrawSphere(Vector2.Lerp(Previous.transform.position, Next.transform.position, t), 0.05F);
+			Gizmos.DrawSphere(Vector2.Lerp(PreviousUnits[0].transform.position, NextUnits[0].transform.position, t), 0.05F);
 		}
 	}
 }
