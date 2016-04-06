@@ -70,9 +70,6 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 						var connection = obj.GetComponent<SCR_Connection>();
 
-//						connection.PreviousUnits = new List<Unit>();
-//						connection.NextUnits = new Unit[1];
-
 						connection.PreviousUnits.Add(previous);
 						connection.NextUnits.Add(next);
 
@@ -86,20 +83,9 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 		Connections = GameObject.FindObjectsOfType<SCR_Connection>();
 
-
-//		foreach (var item in Nodes) 
-//		{
-//			if(item is SCR_NodeMultiply)
-//			{
-//				var node = (SCR_NodeMultiply) item;
-//
-//				node.Bias = Random.value - 0.5F;
-//			}
-//		}
-
 		foreach (var item in Connections) 
 		{
-			item.Weight = Random.value - 0.5F;
+			item.Constant = Random.value - 0.5F;
 		}
 	}
 
@@ -117,13 +103,13 @@ public class SCR_NeuralNetwork : MonoBehaviour
 //				var node = (SCR_NodeMultiply) item;
 
 				var lastError = CaculateError();
-				var lastValue = node.Bias;
+				var lastValue = node.Constant;
 
-				node.Bias += (Random.value - 0.5F) * Step;
+				node.Constant += (Random.value - 0.5F) * Step;
 
 				if(CaculateError() > lastError)
 				{
-					node.Bias = lastValue;
+					node.Constant = lastValue;
 				}
 //			}
 		}
@@ -131,13 +117,13 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		foreach (var item in Connections) 
 		{
 			var lastError = CaculateError();
-			var lastValue = item.Weight;
+			var lastValue = item.Constant;
 
-			item.Weight += (Random.value - 0.5F) * Step;
+			item.Constant += (Random.value - 0.5F) * Step;
 
 			if(CaculateError() > lastError)
 			{
-				item.Weight = lastValue;
+				item.Constant = lastValue;
 			}
 		}
 

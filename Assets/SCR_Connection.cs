@@ -5,11 +5,11 @@ using System.Linq;
 //[ExecuteInEditMode]
 public class SCR_Connection : Unit
 {
-	public float Weight = 0.5F;
+//	public float Constant = 0.5F;
 
 	public override string GetText ()
 	{
-        return Weight.ToString("##.######");
+        return Constant.ToString("##.######");
 	}
 
 	public override float TextScale
@@ -41,7 +41,7 @@ public class SCR_Connection : Unit
 
 	public override void Forward ()
 	{
-		Value = Input * Weight;
+		Value = Input * Constant;
 	}
 
 	public override void Backward ()

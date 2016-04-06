@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public abstract class Unit : TextBase
 {
+	public float Constant;
+
 	public float Input
 	{
 		get

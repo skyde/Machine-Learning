@@ -14,8 +14,6 @@ public class SCR_Node : Unit
 
 	public ActivateFunctionStyle ActivateStyle = ActivateFunctionStyle.Sigmoid;
 
-	public float Bias;
-
 //	public float Input()
 //	{
 //
@@ -26,10 +24,10 @@ public class SCR_Node : Unit
 		switch (ActivateStyle) 
 		{
 		case ActivateFunctionStyle.Sigmoid:
-			Value = 1F / (1F + Mathf.Pow(2.71828F, -Input + Bias));
+			Value = 1F / (1F + Mathf.Pow(2.71828F, -Input + Constant));
 			break;
 		case ActivateFunctionStyle.PureLinear:
-			Value = Input + Bias;
+			Value = Input;
 			break;
 		}
 	}
