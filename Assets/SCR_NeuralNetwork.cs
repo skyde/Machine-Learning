@@ -25,7 +25,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	DATA_Point[] Points;
 	SCR_Node[] Nodes;
-	SCR_Connection[] Connections;
+	Unit[] Units;
 
 	public void Awake()
 	{
@@ -81,9 +81,9 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			}
 		}
 
-		Connections = GameObject.FindObjectsOfType<SCR_Connection>();
+		Units = GameObject.FindObjectsOfType<Unit>();
 
-		foreach (var item in Connections) 
+		foreach (var item in Units) 
 		{
 			item.Constant = Random.value - 0.5F;
 		}
@@ -96,25 +96,20 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			return;
 		}
 
-		foreach (var node in Nodes) 
-		{
-//			if(item is SCR_NodeMultiply)
+//		foreach (var node in Nodes) 
+//		{
+//			var lastError = CaculateError();
+//			var lastValue = node.Constant;
+//
+//			node.Constant += (Random.value - 0.5F) * Step;
+//
+//			if(CaculateError() > lastError)
 //			{
-//				var node = (SCR_NodeMultiply) item;
-
-				var lastError = CaculateError();
-				var lastValue = node.Constant;
-
-				node.Constant += (Random.value - 0.5F) * Step;
-
-				if(CaculateError() > lastError)
-				{
-					node.Constant = lastValue;
-				}
+//				node.Constant = lastValue;
 //			}
-		}
-
-		foreach (var item in Connections) 
+//		}
+//
+		foreach (var item in Units) 
 		{
 			var lastError = CaculateError();
 			var lastValue = item.Constant;
