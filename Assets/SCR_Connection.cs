@@ -41,7 +41,7 @@ public class SCR_Connection : Unit
 
 	public override void Forward ()
 	{
-		
+		Value = Input * Weight;
 	}
 
 	public override void Backward ()

@@ -7,7 +7,7 @@ using System.Linq;
 public class NetworkLayer
 {
 	public GameObject LayerBase;
-	public SCR_Node[] Nodes;
+	public List<Unit> Nodes = new List<Unit>();
 }
 
 [ExecuteInEditMode]
@@ -37,7 +37,6 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		for (int i = 0; i < Layers.Length; i++) 
 		{
 			Layers[i] = new NetworkLayer();
-			Layers[i].Nodes = new SCR_Node[0];
 		}
 
 		for (int i = 0; i < LayersBase.transform.childCount; i++) 
@@ -45,7 +44,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			var c = LayersBase.transform.GetChild(i);
 
 			Layers[i * 2].LayerBase = c.gameObject;
-			Layers[i * 2].Nodes = Layers[i * 2].LayerBase.GetComponentsInChildren<SCR_Node>();
+			Layers[i * 2].Nodes = Layers[i * 2].LayerBase.GetComponentsInChildren<SCR_Node>().ToList<Unit>();
 		}
 //		foreach (var layer in Layers) 
 //		{
@@ -54,14 +53,15 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 		if(Application.isPlaying)
 		{
-			for (int i = 0; i < Layers.Length - 1; i++)
+			for (int i = 0; i < Layers.Length - 1; i += 2)
 			{
 				var currentLayer = Layers[i];
-				var nextLayer = Layers[i + 1];
+				var middleLayer = Layers[i + 1];
+				var nextLayer = Layers[i + 2];
 
-				for (int c = 0; c < currentLayer.Nodes.Length; c++)
+				for (int c = 0; c < currentLayer.Nodes.Count; c++)
 				{
-					for (int n = 0; n < nextLayer.Nodes.Length; n++)
+					for (int n = 0; n < nextLayer.Nodes.Count; n++)
 					{
 						var previous = currentLayer.Nodes[c];
 						var next = nextLayer.Nodes[n];
@@ -75,6 +75,8 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 						connection.PreviousUnits.Add(previous);
 						connection.NextUnits.Add(next);
+
+						middleLayer.Nodes.Add(connection);
 
 						obj.transform.parent = transform;
 					}
