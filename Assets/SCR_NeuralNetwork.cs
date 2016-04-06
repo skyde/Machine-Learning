@@ -24,13 +24,11 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	public bool AutoFit = true;
 
 	DATA_Point[] Points;
-	SCR_Node[] Nodes;
 	Unit[] Units;
 
 	public void Awake()
 	{
 		Points = GameObject.FindObjectsOfType<DATA_Point>();
-		Nodes = GameObject.FindObjectsOfType<SCR_Node>();
 
 		Layers = new NetworkLayer[LayersBase.transform.childCount * 2 - 1];
 
@@ -46,10 +44,6 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			Layers[i * 2].LayerBase = c.gameObject;
 			Layers[i * 2].Nodes = Layers[i * 2].LayerBase.GetComponentsInChildren<SCR_Node>().ToList<Unit>();
 		}
-//		foreach (var layer in Layers) 
-//		{
-//			layer.Nodes = layer.LayerBase.GetComponentsInChildren<SCR_Node>();
-//		}
 
 		if(Application.isPlaying)
 		{
