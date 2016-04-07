@@ -37,10 +37,17 @@ public class SCR_Node : Unit
 		switch (ActivateStyle) 
 		{
 		case ActivateFunctionStyle.Sigmoid:
-			Gradient = Value * (1F - Value);
+			Gradient = Value * (1F - Value) * SumGradients();
 			break;
 		case ActivateFunctionStyle.PureLinear:
-			Gradient = 1;
+
+			Gradient = 1 * SumGradients();
+			
+//			foreach (var item in PreviousUnits)
+//			{
+//				item.
+//			}
+//			Gradient = Input;
 			break;
 		}
 	}
@@ -49,10 +56,10 @@ public class SCR_Node : Unit
 	{
 		if(Input == Value)
 		{
-            return Input.ToString("##.######");
+			return Input.ToString("##.######") + "\ng=" + Gradient.ToString("##.######");
 		}
 
-        return Input.ToString("##.######") + "\n" + Value.ToString("##.######");
+		return Input.ToString("##.######") + "\n" + Value.ToString("##.######") + "\ng=" + Gradient.ToString("##.######");
 	}
 
 	public void OnDrawGizmos()

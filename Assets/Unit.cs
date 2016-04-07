@@ -36,6 +36,18 @@ public abstract class Unit : TextBase
 	public abstract void Forward();
 	public abstract void Backward();
 
+	public float SumGradients()
+	{
+		var value = 0F;
+
+		for (int i = 0; i < NextUnits.Count; i++)
+		{
+			value += NextUnits[i].Gradient;
+		}
+
+		return value;
+	}
+
 //	public void Start()
 //	{
 ////		Refresh();

@@ -26,6 +26,82 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	DATA_Point[] Points;
 	Unit[] Units;
 
+	public void Update()
+	{
+		if(!Application.isPlaying || !AutoFit)
+		{
+			return;
+		}
+
+
+		for(int i = 0; i < Layers.Length; i++)
+		{
+			for(int p = 0; p < Layers[i].Nodes.Count; p++)
+			{
+				Layers[i].Nodes[p].Forward(); 
+			}
+		}
+
+//		Output.Gradient =  Output.Value
+		foreach (var item in Layers[Layers.Length - 1].Nodes) 
+		{
+			float target = 3;
+			item.Gradient = target - item.Value;
+		}
+
+		for(int i = Layers.Length - 2; i >= 0; i--)
+		{
+			for(int p = 0; p < Layers[i].Nodes.Count; p++)
+			{
+				Layers[i].Nodes[p].Backward(); 
+			}
+		}
+
+//		foreach (var point in Points) 
+//		{
+//			//var p = (Vector2) point.transform.position;
+//
+//			//var y = Evaluate(p.x);
+//
+////			var error = p.y - y;
+////
+////			error *= error;
+////
+////			value += error;
+//			Input.Value = point.transform.position.x;
+//
+//			for(int i = 0; i < Layers.Length; i++)
+//			{
+//				for(int p = 0; p < Layers[i].Nodes.Count; p++)
+//				{
+//					Layers[i].Nodes[p].Forward(); 
+//				}
+//			}
+//
+//			for(int i = Layers.Length - 1; i >= 0; i--)
+//			{
+//				for(int p = 0; p < Layers[i].Nodes.Count; p++)
+//				{
+//					Layers[i].Nodes[p].Backward(); 
+//				}
+//			}
+//				
+//		}
+
+//		foreach (var item in Units) 
+//		{
+//			var lastError = CaculateError();
+//			var lastValue = item.Constant;
+//
+//			item.Constant += (Random.value - 0.5F) * Step;
+//
+//			if(CaculateError() > lastError)
+//			{
+//				item.Constant = lastValue;
+//			}
+//		}
+	}
+
 	public void Awake()
 	{
 		Points = GameObject.FindObjectsOfType<DATA_Point>();
@@ -83,27 +159,6 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		}
 	}
 
-	public void Update()
-	{
-		if(!Application.isPlaying || !AutoFit)
-		{
-			return;
-		}
-
-		foreach (var item in Units) 
-		{
-			var lastError = CaculateError();
-			var lastValue = item.Constant;
-
-			item.Constant += (Random.value - 0.5F) * Step;
-
-			if(CaculateError() > lastError)
-			{
-				item.Constant = lastValue;
-			}
-		}
-	}
-
 	public float CaculateError()
 	{
 		var value = 0F;
@@ -141,6 +196,8 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public void OnDrawGizmos()
 	{
+		return;
+
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawLine(Vector2.zero, new Vector2(100, 0));
 

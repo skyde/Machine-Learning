@@ -9,7 +9,7 @@ public class SCR_Connection : Unit
 
 	public override string GetText ()
 	{
-        return Constant.ToString("##.######");
+		return Constant.ToString("##.######") + "\ng=" + Gradient.ToString("##.######");
 	}
 
 	public override float TextScale
@@ -46,6 +46,7 @@ public class SCR_Connection : Unit
 
 	public override void Backward ()
 	{
+		Gradient = Constant * SumGradients();
 	}
 
 	public override void Update()
