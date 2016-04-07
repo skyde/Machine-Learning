@@ -51,16 +51,16 @@ public class SCR_Connection : Unit
 
 	public override void Forward ()
 	{
-		Value = Input * Sigmoid(Constant);//1F / (1F + Mathf.Pow(2.71828F, -Input + Constant));
+//		Value = Input * Sigmoid(Constant);//1F / (1F + Mathf.Pow(2.71828F, -Input + Constant));
 
-//		Value = Input * Constant;
+		Value = Input * Constant;
 	}
 
 	public override void Backward ()
 	{
-		Gradient = Sigmoid(Constant) * (1F - Sigmoid(Constant)) * SumGradients();
+//		Gradient = Sigmoid(Constant) * (1F - Sigmoid(Constant)) * SumGradients();
 
-//		Gradient = Constant * SumGradients();
+		Gradient = Constant * SumGradients();
 	}
 
 	public override void Update()
