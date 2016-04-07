@@ -33,35 +33,41 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			return;
 		}
 
-		for(int i = 0; i < Layers.Length; i++)
+		foreach (var point in Points) 
 		{
-			for(int p = 0; p < Layers[i].Nodes.Count; p++)
-			{
-				Layers[i].Nodes[p].Forward(); 
-			}
-		}
+			var pos = point.transform.position;
 
-		foreach (var item in Layers[Layers.Length - 1].Nodes) 
-		{
-			float target = 3;
-			item.Gradient = target - item.Value;
-		}
+			Input.Value = pos.x;
 
-		for(int i = Layers.Length - 2; i >= 0; i--)
-		{
-			for(int p = 0; p < Layers[i].Nodes.Count; p++)
+			for(int i = 0; i < Layers.Length; i++)
 			{
-				Layers[i].Nodes[p].Backward(); 
-			}
-		}
-
-		if(AutoFit)
-		{
-			foreach (var item in Units) 
-			{
-				if(item.UsesConstant)
+				for(int p = 0; p < Layers[i].Nodes.Count; p++)
 				{
-					item.Constant += Step * item.Gradient;
+					Layers[i].Nodes[p].Forward(); 
+				}
+			}
+
+			foreach (var item in Layers[Layers.Length - 1].Nodes) 
+			{
+				item.Gradient = pos.y - item.Value;
+			}
+
+			for(int i = Layers.Length - 2; i >= 0; i--)
+			{
+				for(int p = 0; p < Layers[i].Nodes.Count; p++)
+				{
+					Layers[i].Nodes[p].Backward(); 
+				}
+			}
+
+			if(AutoFit)
+			{
+				foreach (var item in Units) 
+				{
+					if(item.UsesConstant)
+					{
+						item.Constant += Step * item.Gradient;
+					}
 				}
 			}
 		}
@@ -205,7 +211,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public void OnDrawGizmos()
 	{
-		return;
+//		return;
 
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawLine(Vector2.zero, new Vector2(100, 0));
