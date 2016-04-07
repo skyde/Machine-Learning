@@ -13,6 +13,8 @@ public class NetworkLayer
 [ExecuteInEditMode]
 public class SCR_NeuralNetwork : MonoBehaviour 
 {
+	public bool AutoFit = true;
+
     public SCR_Node Input;
     public SCR_Node Output;
 	public GameObject LayersBase;
@@ -20,8 +22,6 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public float Step = 0.01F;
 	public GameObject Connection;
-
-	public bool AutoFit = true;
 
 	DATA_Point[] Points;
 	Unit[] Units;
@@ -33,12 +33,46 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			return;
 		}
 
-		foreach (var point in Points) 
+		if(AutoFit)
 		{
-			var pos = point.transform.position;
+			foreach (var point in Points) 
+			{
+				var pos = point.transform.position;
 
-			Input.Value = pos.x;
+				Input.Value = pos.x;
 
+				for(int i = 0; i < Layers.Length; i++)
+				{
+					for(int p = 0; p < Layers[i].Nodes.Count; p++)
+					{
+						Layers[i].Nodes[p].Forward(); 
+					}
+				}
+
+				foreach (var item in Layers[Layers.Length - 1].Nodes) 
+				{
+					item.Gradient = pos.y - item.Value;
+				}
+
+				for(int i = Layers.Length - 2; i >= 0; i--)
+				{
+					for(int p = 0; p < Layers[i].Nodes.Count; p++)
+					{
+						Layers[i].Nodes[p].Backward(); 
+					}
+				}
+
+				foreach (var item in Units) 
+				{
+					if(item.UsesConstant)
+					{
+						item.Constant += Step * item.Gradient;// * item.Value;
+					}
+				}
+			}
+		}
+		else
+		{
 			for(int i = 0; i < Layers.Length; i++)
 			{
 				for(int p = 0; p < Layers[i].Nodes.Count; p++)
@@ -49,7 +83,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 			foreach (var item in Layers[Layers.Length - 1].Nodes) 
 			{
-				item.Gradient = pos.y - item.Value;
+				item.Gradient = 3F - item.Value;
 			}
 
 			for(int i = Layers.Length - 2; i >= 0; i--)
@@ -60,14 +94,11 @@ public class SCR_NeuralNetwork : MonoBehaviour
 				}
 			}
 
-			if(AutoFit)
+			foreach (var item in Units) 
 			{
-				foreach (var item in Units) 
+				if(item.UsesConstant)
 				{
-					if(item.UsesConstant)
-					{
-						item.Constant += Step * item.Gradient;
-					}
+					item.Constant += Step * item.Gradient;// * item.Value;
 				}
 			}
 		}
@@ -211,6 +242,10 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public void OnDrawGizmos()
 	{
+		if(!AutoFit)
+		{
+			return;
+		}
 //		return;
 
 		Gizmos.color = Color.yellow;

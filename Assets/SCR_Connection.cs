@@ -60,7 +60,7 @@ public class SCR_Connection : Unit
 	{
 //		Gradient = Sigmoid(Constant) * (1F - Sigmoid(Constant)) * SumGradients();
 
-		Gradient = Constant * SumGradients();
+		Gradient = Input * SumGradients();
 	}
 
 	public override void Update()
