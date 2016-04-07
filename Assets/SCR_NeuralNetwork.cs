@@ -28,11 +28,10 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public void Update()
 	{
-		if(!Application.isPlaying || !AutoFit)
+		if(!Application.isPlaying)
 		{
 			return;
 		}
-
 
 		for(int i = 0; i < Layers.Length; i++)
 		{
@@ -42,7 +41,6 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			}
 		}
 
-//		Output.Gradient =  Output.Value
 		foreach (var item in Layers[Layers.Length - 1].Nodes) 
 		{
 			float target = 3;
@@ -54,6 +52,17 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			for(int p = 0; p < Layers[i].Nodes.Count; p++)
 			{
 				Layers[i].Nodes[p].Backward(); 
+			}
+		}
+
+		if(AutoFit)
+		{
+			foreach (var item in Units) 
+			{
+				if(item.UsesConstant)
+				{
+					item.Constant += Step * item.Gradient;
+				}
 			}
 		}
 

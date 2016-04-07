@@ -7,6 +7,14 @@ public abstract class Unit : TextBase
 {
 	public float Constant;
 
+	public virtual bool UsesConstant
+	{
+		get
+		{
+			return true;
+		}
+	}
+
 	public float Input
 	{
 		get

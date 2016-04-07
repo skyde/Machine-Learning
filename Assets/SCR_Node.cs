@@ -14,6 +14,14 @@ public class SCR_Node : Unit
 
 	public ActivateFunctionStyle ActivateStyle = ActivateFunctionStyle.Sigmoid;
 
+	public override bool UsesConstant
+	{
+		get 
+		{
+			return ActivateStyle == ActivateFunctionStyle.Sigmoid;
+		}
+	}
+
 //	public float Input()
 //	{
 //
@@ -64,6 +72,11 @@ public class SCR_Node : Unit
 
 	public void OnDrawGizmos()
 	{
+		if(!UsesConstant)
+		{
+			Constant = 0;
+		}
+
 		Gizmos.color = new Color(0.5F, 0.8F, 1, 1);
 
 		Gizmos.DrawWireCube(transform.position, new Vector2(1, 1));
