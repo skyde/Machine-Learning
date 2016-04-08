@@ -27,6 +27,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public Unit[] AllUnits = new Unit[0];
 	public List<Layer> Layers = new List<Layer>();
+	DATA_Point[] Points;
 
 	public float Step = 0.0005F;
 
@@ -35,6 +36,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	public void Awake()
 	{
 		AllUnits = GameObject.FindObjectsOfType<Unit>();
+		Points = GameObject.FindObjectsOfType<DATA_Point>();
 
 		Layers = new List<Layer>();
 
@@ -65,6 +67,16 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public void Update()
 	{
+		foreach (var item in Points) 
+		{
+			RunStep(item.transform.position.x, item.transform.position.y);
+		}
+	}
+
+	public void RunStep(double input, double desiredOutput)
+	{
+		Input.Value = input;
+
 		foreach (var layer in Layers) 
 		{
 			foreach (var unit in layer.Units) 
@@ -77,6 +89,8 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		{
 			item.Gradient = 1F;
 		}
+
+		Output.Gradient = desiredOutput - Output.Value;
 
 		for (int i = Layers.Count - 1; i >= 0; i--)
 		{
@@ -95,6 +109,57 @@ public class SCR_NeuralNetwork : MonoBehaviour
 					item.Value += Step * item.Gradient;
 				}
 			}
+		}
+	}
+
+	public bool Preview = true;
+
+	public double Evaluate(double value)
+	{
+		Input.Value = value;
+
+		foreach (var layer in Layers) 
+		{
+			foreach (var unit in layer.Units) 
+			{
+				unit.Forward();
+			}
+		}
+
+		return Output.Value;
+	}
+
+	public void OnDrawGizmos()
+	{
+		if(!Preview)
+		{
+			return;
+		}
+
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawLine(Vector2.zero, new Vector2(100, 0));
+
+		Gizmos.color = Color.white;
+
+		var iter = 1000;
+        var last = Vector2.zero;
+		
+		for (int i = 0; i < iter; i++) 
+		{
+			var t = i / (float) iter;
+			
+			var x = t * 20;
+
+			var y = Evaluate(x);
+
+			var p = new Vector2(x, (float) y);
+			
+			if(i > 0)
+			{
+                Gizmos.DrawLine(last, p);
+			}
+			
+			last = p;
 		}
 	}
 
