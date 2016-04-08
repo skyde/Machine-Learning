@@ -42,7 +42,8 @@ public class Multiply : Unit
 				value *= Inputs[x].Value;
 			}
 
-			Inputs[i].Gradient = value;
+			Inputs[i].Gradient = value * Gradient;
 		}
 	}
 }
+

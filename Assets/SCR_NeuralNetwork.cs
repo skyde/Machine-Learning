@@ -30,6 +30,8 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 	public float Step = 0.0005F;
 
+	public bool Converge = true;
+
 	public void Awake()
 	{
 		AllUnits = GameObject.FindObjectsOfType<Unit>();
@@ -84,11 +86,14 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			}
 		}
 
-		foreach (var item in AllUnits) 
+		if(Converge)
 		{
-			if(item is Data)
+			foreach (var item in AllUnits) 
 			{
-				item.Value += Step;
+				if(item is Data)
+				{
+					item.Value += Step;
+				}
 			}
 		}
 	}

@@ -52,17 +52,17 @@ public abstract class Unit : MonoBehaviour
 		return value;
 	}
 
-	public float SumOutputGradients()
-	{
-		var value = 0F;
-
-		for (int i = 0; i < Outputs.Count; i++)
-		{
-			value += Outputs[i].Gradient;
-		}
-
-		return value;
-	}
+//	public float SumOutputGradients()
+//	{
+//		var value = 0F;
+//
+//		for (int i = 0; i < Outputs.Count; i++)
+//		{
+//			value += Outputs[i].Gradient;
+//		}
+//
+//		return value;
+//	}
 
 	public void OnDrawGizmos()
 	{
