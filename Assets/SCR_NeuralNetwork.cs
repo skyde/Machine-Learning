@@ -10,6 +10,7 @@ using System.Linq;
 //	public List<Unit> Nodes = new List<Unit>();
 //}
 
+[System.Serializable]
 public class Layer
 {
 	public List<Unit> Units = new List<Unit>();
@@ -35,7 +36,6 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 		for (int i = 0; i < 100; i++) 
 		{
-			var count = 0;
 			Layer layer = null;
 
 			foreach (var item in AllUnits) 
@@ -52,7 +52,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 				}
 			}
 
-			if(count == 0)
+			if(layer == null)
 			{
 				break;
 			}
@@ -72,6 +72,14 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		foreach (var item in AllUnits) 
 		{
 			item.Gradient = 1F;
+		}
+
+		for (int i = Layers.Count - 1; i >= 0; i--)
+		{
+			foreach (var unit in Layers[i].Units) 
+			{
+				unit.Backward();
+			}
 		}
 	}
 
