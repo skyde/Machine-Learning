@@ -3,7 +3,7 @@
 //using System.Linq;
 //
 ////[ExecuteInEditMode]
-//public class SCR_Connection : Unit
+//public class SCR_ConnectionBias : Unit
 //{
 ////	public float Constant = 0.5F;
 //
@@ -39,28 +39,16 @@
 //		}
 //	}
 //
-////	public static float Sigmoid(float v)
-////	{
-//////		if (v < -10.0F) return 0.0F;
-//////		else if (v > 10.0F) return 1.0F;
-//////
-//////		v = Mathf.Clamp(v, -20, 20);
-////
-////		return 1F / (1F + Mathf.Pow(2.71828F, -v));
-////	}
-////
 //	public override void Forward ()
 //	{
-////		Value = Input * Sigmoid(Constant);//1F / (1F + Mathf.Pow(2.71828F, -Input + Constant));
-//
-//		Value = Input * Constant;
+//		Value = Input + Constant;
 //	}
 //
 //	public override void Backward ()
 //	{
 ////		Gradient = Sigmoid(Constant) * (1F - Sigmoid(Constant)) * SumGradients();
 //
-//		Gradient = Constant * SumGradients();
+//		Gradient = SumGradients();
 //	}
 //
 //	public override void Update()

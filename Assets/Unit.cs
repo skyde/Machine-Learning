@@ -2,77 +2,100 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEditor;
 
-public abstract class Unit : TextBase
+public class Unit : MonoBehaviour
 {
-	public float Constant;
-
-	public virtual bool UsesConstant
-	{
-		get
-		{
-			return true;
-		}
-	}
-
-	public float Input
-	{
-		get
-		{
-			if(PreviousUnits.Count > 0)
-			{
-				var input = 0F;
-
-				for (int i = 0; i < PreviousUnits.Count; i++)
-				{
-					input += PreviousUnits[i].Value;
-				}
-
-				return input;
-			}
-
-			return Value;
-		}
-	}
-
 	public float Value;
 	public float Gradient;
 
-	public List<Unit> NextUnits = new List<Unit>();
-	public List<Unit> PreviousUnits = new List<Unit>();
+	public int Layer;
 
-	public abstract void Forward();
-	public abstract void Backward();
+	public List<Unit> Inputs = new List<Unit>();
+	public List<Unit> Outputs = new List<Unit>();
 
-	public float SumGradients()
+	public string Identifier
+	{
+		get
+		{
+			return "data";
+		}
+	}
+
+//	public void CaculateForward()
+//	{
+//		Value = Forward();
+//	}
+//
+//	public void CaculateBackward()
+//	{
+//		Gradient = Backward();
+//	}
+
+	public virtual void Forward()
+	{
+//		if(Inputs.Count > 0)
+//		{
+//
+//		}
+//		aV SumInputValues();
+	}
+
+	public virtual void Backward()
+	{
+//		return SumOutputGradients();
+	}
+
+	public float SumInputValues()
 	{
 		var value = 0F;
 
-		for (int i = 0; i < NextUnits.Count; i++)
+		for (int i = 0; i < Inputs.Count; i++)
 		{
-			value += NextUnits[i].Gradient;
+			value += Inputs[i].Value;
 		}
 
 		return value;
 	}
 
-//	public void Start()
-//	{
-////		Refresh();
-//	}
+	public float SumOutputGradients()
+	{
+		var value = 0F;
 
-//	public void Refresh()
-//	{
-//		var connections = GameObject.FindObjectsOfType<SCR_Connection>();
-//
-//		NextUnits = connections.Where(_ => _.PreviousUnits.Contains(this)).ToArray();
-//		PreviousUnits = connections.Where(_ => _.NextUnits.Contains(this)).ToArray();
-//	}
+		for (int i = 0; i < Outputs.Count; i++)
+		{
+			value += Outputs[i].Gradient;
+		}
 
-//	public override void OnValidate()
-//	{
-//		base.OnValidate();
-//
-//		Refresh();
-//	}
+		return value;
+	}
+
+	public void OnDrawGizmos()
+	{
+		Gizmos.color = new Color(1, 0.7F, 0.4F);
+		foreach (var item in Inputs) 
+		{
+			var mid = Vector2.Lerp(transform.position, item.transform.position, 0.5F);
+			Gizmos.DrawLine(transform.position, mid);
+		}
+
+		Gizmos.color = new Color(0.4F, 0.7F, 1F);
+		foreach (var item in Outputs) 
+		{
+			var mid = Vector2.Lerp(transform.position, item.transform.position, 0.5F);
+			Gizmos.DrawLine(transform.position, mid);
+		}
+
+		var size = new Vector3(2, 2);
+
+		Gizmos.color = new Color(0.5F, 0.8F, 1F, 0.7F);
+		Gizmos.DrawWireCube(transform.position, size);
+
+		Gizmos.color = new Color(0, 0, 0, 0);
+		Gizmos.DrawCube(transform.position, size);
+
+		Handles.Label(transform.position, 
+			Identifier + "\nvalue " + Value + "\ngradient " + Gradient);
+//		Helpers.
+	}
 }

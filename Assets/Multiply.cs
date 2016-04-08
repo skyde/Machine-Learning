@@ -1,0 +1,40 @@
+using UnityEngine;
+using System.Collections;
+using System.Linq;
+using System.Collections.Generic;
+using UnityEditor;
+
+public class Multiply : Unit
+{
+	public override void Forward ()
+	{
+		var value = 1F;
+
+		for (int i = 0; i < Inputs.Count; i++)
+		{
+			value *= Inputs[i].Value;
+		}
+
+		Value = value;
+	}
+
+	public override void Backward ()
+	{
+		for (int i = 0; i < Inputs.Count; i++)
+		{
+			var value = 1F;
+
+			for (int x = 0; x < Inputs.Count; x++) 
+			{
+				if(i == x)
+				{
+					continue;
+				}
+
+				value *= x;
+			}
+
+			Inputs[i].Gradient = value;
+		}
+	}
+}
