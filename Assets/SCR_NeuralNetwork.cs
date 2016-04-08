@@ -92,7 +92,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			{
 				if(item is Data)
 				{
-					item.Value += Step;
+					item.Value += Step * item.Gradient;
 				}
 			}
 		}
