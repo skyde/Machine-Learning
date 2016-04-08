@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
 
-public class Unit : MonoBehaviour
+public abstract class Unit : MonoBehaviour
 {
 	public float Value = 1;
 	public float Gradient = 1;
@@ -14,13 +14,7 @@ public class Unit : MonoBehaviour
 	public List<Unit> Inputs = new List<Unit>();
 	public List<Unit> Outputs = new List<Unit>();
 
-	public virtual string Identifier
-	{
-		get
-		{
-			return "data";
-		}
-	}
+	public abstract string Identifier { get; }
 
 //	public void CaculateForward()
 //	{
@@ -32,19 +26,19 @@ public class Unit : MonoBehaviour
 //		Gradient = Backward();
 //	}
 
-	public virtual void Forward()
-	{
-//		if(Inputs.Count > 0)
-//		{
-//
-//		}
-//		aV SumInputValues();
-	}
+	public abstract void Forward();
+//	{
+////		if(Inputs.Count > 0)
+////		{
+////
+////		}
+////		aV SumInputValues();
+//	}
 
-	public virtual void Backward()
-	{
-//		return SumOutputGradients();
-	}
+	public abstract void Backward();
+//	{
+////		return SumOutputGradients();
+//	}
 
 	public float SumInputValues()
 	{

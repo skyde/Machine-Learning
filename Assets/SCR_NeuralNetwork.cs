@@ -28,6 +28,8 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	public Unit[] AllUnits = new Unit[0];
 	public List<Layer> Layers = new List<Layer>();
 
+	public float Step = 0.0005F;
+
 	public void Awake()
 	{
 		AllUnits = GameObject.FindObjectsOfType<Unit>();
@@ -79,6 +81,14 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			foreach (var unit in Layers[i].Units) 
 			{
 				unit.Backward();
+			}
+		}
+
+		foreach (var item in AllUnits) 
+		{
+			if(item is Data && item.Layer >= 0)
+			{
+				item.Value += Step;
 			}
 		}
 	}

@@ -39,7 +39,7 @@ public class Multiply : Unit
 					continue;
 				}
 
-				value *= x;
+				value *= Inputs[x].Value;
 			}
 
 			Inputs[i].Gradient = value;
