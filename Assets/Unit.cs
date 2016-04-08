@@ -6,15 +6,15 @@ using UnityEditor;
 
 public class Unit : MonoBehaviour
 {
-	public float Value;
-	public float Gradient;
+	public float Value = 1;
+	public float Gradient = 1;
 
 	public int Layer;
 
 	public List<Unit> Inputs = new List<Unit>();
 	public List<Unit> Outputs = new List<Unit>();
 
-	public string Identifier
+	public virtual string Identifier
 	{
 		get
 		{

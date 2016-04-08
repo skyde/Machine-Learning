@@ -10,6 +10,11 @@ using System.Linq;
 //	public List<Unit> Nodes = new List<Unit>();
 //}
 
+public class Layer
+{
+	public List<Unit> Units = new List<Unit>();
+}
+
 [ExecuteInEditMode]
 public class SCR_NeuralNetwork : MonoBehaviour 
 {
@@ -20,23 +25,30 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	public Unit Output;
 
 	public Unit[] AllUnits = new Unit[0];
+	public List<Layer> Layers = new List<Layer>();
 
 	public void Awake()
 	{
 		AllUnits = GameObject.FindObjectsOfType<Unit>();
-	}
 
-	public void Update()
-	{
+		Layers = new List<Layer>();
+
 		for (int i = 0; i < 100; i++) 
 		{
 			var count = 0;
+			Layer layer = null;
 
 			foreach (var item in AllUnits) 
 			{
 				if(item.Layer == i)
 				{
-					item.Forward();
+					if(layer == null)
+					{
+						layer = new Layer();
+						Layers.Add(layer);
+					}
+
+					layer.Units.Add(item);
 				}
 			}
 
@@ -44,6 +56,22 @@ public class SCR_NeuralNetwork : MonoBehaviour
 			{
 				break;
 			}
+		}
+	}
+
+	public void Update()
+	{
+		foreach (var layer in Layers) 
+		{
+			foreach (var unit in layer.Units) 
+			{
+				unit.Forward();
+			}
+		}
+
+		foreach (var item in AllUnits) 
+		{
+			item.Gradient = 1F;
 		}
 	}
 

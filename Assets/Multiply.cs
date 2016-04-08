@@ -6,6 +6,14 @@ using UnityEditor;
 
 public class Multiply : Unit
 {
+	public override string Identifier 
+	{
+		get 
+		{
+			return "mul";
+		}
+	}
+
 	public override void Forward ()
 	{
 		var value = 1F;
