@@ -13,7 +13,7 @@ using System.Linq;
 [System.Serializable]
 public class Layer
 {
-	public List<Unit> Units = new List<Unit>();
+	public List<SCR_Node> Nodes = new List<SCR_Node>();
 }
 
 //[ExecuteInEditMode]
@@ -22,6 +22,9 @@ public class SCR_NeuralNetwork : MonoBehaviour
 //	public bool AutoFit = true;
 //	public bool Preview = true;
 
+	public float Step = 0.0005F;
+	public bool Converge = true;
+
 	public Unit Input;
 	public Unit Output;
 
@@ -29,40 +32,74 @@ public class SCR_NeuralNetwork : MonoBehaviour
 	public List<Layer> Layers = new List<Layer>();
 	DATA_Point[] Points;
 
-	public float Step = 0.0005F;
-
-	public bool Converge = true;
+	public GameObject LayersContainer;
+	public GameObject Connection;
 
 	public void Awake()
 	{
-		AllUnits = GameObject.FindObjectsOfType<Unit>();
 		Points = GameObject.FindObjectsOfType<DATA_Point>();
-
 		Layers = new List<Layer>();
 
-		for (int i = 0; i < 100; i++) 
+		SCR_Node[] lastNodes = null;
+//		foreach (var item in LayersContainer.transform)
+		for (int i = 0; i < LayersContainer.transform.childCount; i++)
 		{
-			Layer layer = null;
+			var obj = LayersContainer.transform.GetChild(i).gameObject;
+			var nodes = obj.GetComponentsInChildren<SCR_Node>();
 
-			foreach (var item in AllUnits) 
+			if(lastNodes != null)
 			{
-				if(item.Layer == i)
+				foreach (var left in lastNodes) 
 				{
-					if(layer == null)
+					foreach (var right in nodes) 
 					{
-						layer = new Layer();
-						Layers.Add(layer);
-					}
+						var c = GameObject.Instantiate(Connection);
+						var connection = c.GetComponent<SCR_Node>();
 
-					layer.Units.Add(item);
+						connection.transform.position = Vector2.Lerp(left.transform.position, right.transform.position, 0.35F);
+//						connection.transform.parent = left.transform.parent;
+
+
+						connection.Input.Inputs.Add(left.Output);
+						right.Input.Inputs.Add(connection.Output);
+
+						left.SubLayers.AddRange(connection.SubLayers);
+					}
 				}
 			}
 
-			if(layer == null)
-			{
-				break;
-			}
+			var l = new Layer();
+			l.Nodes.AddRange(nodes);
+			Layers.Add(l);
+
+			lastNodes = nodes;
 		}
+
+		AllUnits = GameObject.FindObjectsOfType<Unit>();
+
+//		for (int i = 0; i < 100; i++) 
+//		{
+//			Layer layer = null;
+//
+//			foreach (var item in AllUnits) 
+//			{
+//				if(item.Layer == i)
+//				{
+//					if(layer == null)
+//					{
+//						layer = new Layer();
+//						Layers.Add(layer);
+//					}
+//
+//					layer.Units.Add(item);
+//				}
+//			}
+
+//			if(layer == null)
+//			{
+//				break;
+//			}
+//		}
 	}
 
 	public void Update()
@@ -79,7 +116,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 		foreach (var layer in Layers) 
 		{
-			foreach (var unit in layer.Units) 
+			foreach (var unit in layer.Nodes) 
 			{
 				unit.Forward();
 			}
@@ -87,14 +124,14 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 		foreach (var item in AllUnits) 
 		{
-			item.Gradient = 1F;
+			item.Gradient = 0F;
 		}
 
 		Output.Gradient = desiredOutput - Output.Value;
 
 		for (int i = Layers.Count - 1; i >= 0; i--)
 		{
-			foreach (var unit in Layers[i].Units) 
+			foreach (var unit in Layers[i].Nodes) 
 			{
 				unit.Backward();
 			}
@@ -120,8 +157,13 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 		foreach (var layer in Layers) 
 		{
-			foreach (var unit in layer.Units) 
+			foreach (var unit in layer.Nodes) 
 			{
+				if(unit == null)
+				{
+					continue;
+				}
+
 				unit.Forward();
 			}
 		}

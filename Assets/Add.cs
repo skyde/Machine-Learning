@@ -23,7 +23,7 @@ public class Add : Unit
 	{
 		for (int i = 0; i < Inputs.Count; i++)
 		{
-			Inputs[i].Gradient = Gradient;
+			Inputs[i].Gradient += Gradient;
 		}
 	}
 }

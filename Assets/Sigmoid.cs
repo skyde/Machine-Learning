@@ -18,7 +18,6 @@ public class Sigmoid : Unit
 	public override void Forward ()
 	{
 		Value = CaculateSigmoid(SumInputValues());
-//		print(SumInputValues() + " " + Value);
 	}
 
 	public override void Backward ()
@@ -27,20 +26,6 @@ public class Sigmoid : Unit
 		{
 			Inputs[i].Gradient = (Value * (1F - Value)) * Gradient;
 		}
-//			var value = 1F;
-//
-//			for (int x = 0; x < Inputs.Count; x++) 
-//			{
-//				if(i == x)
-//				{
-//					continue;
-//				}
-//
-//				value *= Inputs[x].Value;
-//			}
-//
-//			Inputs[i].Gradient = value;
-//		}
 	}
 
 	public static double CaculateSigmoid(double value)

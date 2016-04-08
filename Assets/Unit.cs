@@ -9,10 +9,10 @@ public abstract class Unit : MonoBehaviour
 	public double Value = 1;
 	public double Gradient = 1;
 
-	public int Layer;
+//	public int Layer;
 
 	public List<Unit> Inputs = new List<Unit>();
-	public List<Unit> Outputs = new List<Unit>();
+//	public List<Unit> Outputs = new List<Unit>();
 
 	public abstract string Identifier { get; }
 
@@ -73,11 +73,13 @@ public abstract class Unit : MonoBehaviour
 			Gizmos.DrawLine(transform.position, mid);
 		}
 
-		Gizmos.color = new Color(0.4F, 0.7F, 1F);
-		foreach (var item in Outputs) 
+//		Gizmos.color = new Color(0.4F, 0.7F, 1F);
+		Gizmos.color = new Color(1, 0.7F, 0.4F, 0.3F);
+
+		foreach (var item in Inputs) 
 		{
-			var mid = Vector2.Lerp(transform.position, item.transform.position, 0.5F);
-			Gizmos.DrawLine(transform.position, mid);
+//			var mid = Vector2.Lerp(item.transform.position, transform.position, 0.5F);
+			Gizmos.DrawLine(transform.position, item.transform.position);
 		}
 
 		var size = new Vector3(2, 2);
