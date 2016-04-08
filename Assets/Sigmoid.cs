@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
+using System;
 
 public class Sigmoid : Unit
 {
@@ -17,6 +18,7 @@ public class Sigmoid : Unit
 	public override void Forward ()
 	{
 		Value = CaculateSigmoid(SumInputValues());
+//		print(SumInputValues() + " " + Value);
 	}
 
 	public override void Backward ()
@@ -41,8 +43,8 @@ public class Sigmoid : Unit
 //		}
 	}
 
-	public static float CaculateSigmoid(float value)
+	public static double CaculateSigmoid(double value)
 	{
-		return 1F / (1F + Mathf.Exp(-value));
+		return 1.0 / (1.0 + Math.Exp(-value));
 	}
 }

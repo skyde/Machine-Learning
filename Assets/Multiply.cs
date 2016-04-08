@@ -16,7 +16,7 @@ public class Multiply : Unit
 
 	public override void Forward ()
 	{
-		var value = 1F;
+		var value = 1.0;
 
 		for (int i = 0; i < Inputs.Count; i++)
 		{
@@ -30,7 +30,7 @@ public class Multiply : Unit
 	{
 		for (int i = 0; i < Inputs.Count; i++)
 		{
-			var value = 1F;
+			var value = 1.0;
 
 			for (int x = 0; x < Inputs.Count; x++) 
 			{

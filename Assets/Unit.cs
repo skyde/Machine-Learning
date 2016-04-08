@@ -6,8 +6,8 @@ using UnityEditor;
 
 public abstract class Unit : MonoBehaviour
 {
-	public float Value = 1;
-	public float Gradient = 1;
+	public double Value = 1;
+	public double Gradient = 1;
 
 	public int Layer;
 
@@ -40,9 +40,9 @@ public abstract class Unit : MonoBehaviour
 ////		return SumOutputGradients();
 //	}
 
-	public float SumInputValues()
+	public double SumInputValues()
 	{
-		var value = 0F;
+		var value = 0.0;
 
 		for (int i = 0; i < Inputs.Count; i++)
 		{
