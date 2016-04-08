@@ -16,7 +16,7 @@ public class Layer
 	public List<Unit> Units = new List<Unit>();
 }
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class SCR_NeuralNetwork : MonoBehaviour 
 {
 //	public bool AutoFit = true;
@@ -86,7 +86,7 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 		foreach (var item in AllUnits) 
 		{
-			if(item is Data && item.Layer >= 0)
+			if(item is Data)
 			{
 				item.Value += Step;
 			}

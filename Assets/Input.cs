@@ -4,13 +4,13 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEditor;
 
-public class Data : Unit
+public class Input : Unit
 {
 	public override string Identifier
 	{
 		get
 		{
-			return "data";
+			return "input";
 		}
 	}
 
@@ -22,4 +22,3 @@ public class Data : Unit
 	{
 	}
 }
-
