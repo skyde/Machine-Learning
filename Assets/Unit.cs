@@ -91,7 +91,7 @@ public abstract class Unit : MonoBehaviour
 		Gizmos.DrawCube(transform.position, size);
 
 		Handles.Label(transform.position, 
-			Identifier + "\nvalue " + Value + "\ngradient " + Gradient);
+			Identifier + "\nvalue " + Value.ToString("##.#####") + "\ngradient " + Gradient.ToString("##.#####"));
 //		Helpers.
 	}
 }

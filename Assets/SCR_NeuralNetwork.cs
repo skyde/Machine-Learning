@@ -49,14 +49,16 @@ public class SCR_NeuralNetwork : MonoBehaviour
 
 			if(lastNodes != null)
 			{
+				var t = 0F;
 				foreach (var left in lastNodes) 
 				{
+					t += 1F / (float) lastNodes.Length;
 					foreach (var right in nodes) 
 					{
 						var c = GameObject.Instantiate(Connection);
 						var connection = c.GetComponent<SCR_Node>();
 
-						connection.transform.position = Vector2.Lerp(left.transform.position, right.transform.position, 0.35F);
+						connection.transform.position = Vector2.Lerp(left.transform.position, right.transform.position, 0.35F + t * 0.3F);
 //						connection.transform.parent = left.transform.parent;
 
 
@@ -76,6 +78,14 @@ public class SCR_NeuralNetwork : MonoBehaviour
 		}
 
 		AllUnits = GameObject.FindObjectsOfType<Unit>();
+
+		foreach (var item in AllUnits) 
+		{
+			if(item is Data)
+			{
+				item.Value = (Random.value - 0.5F);
+			}
+		}
 
 //		for (int i = 0; i < 100; i++) 
 //		{
