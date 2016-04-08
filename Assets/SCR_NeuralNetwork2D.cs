@@ -1,240 +1,229 @@
-﻿//using UnityEngine;
-//using System.Collections;
-//using System.Collections.Generic;
-//using System.Linq;
-//
-//[System.Serializable]
-//public class NeuralNetworkLayer
-//{
-//	public SCR_Neuron[] Neurons;
-//}
-//
-//public struct GizmoData
-//{
-//	public Vector2 Position;
-//	public Vector2 T;
-//}
-//
-//public class SCR_NeuralNetwork2D : MonoBehaviour 
-//{
-//	public SCR_Neuron X;
-//	public SCR_Neuron Y;
-//
-//	public SCR_Neuron OutputRed;
-//	public SCR_Neuron OutputBlue;
-//
-//	DATA_Point[] Points;
-//
-//	public NeuralNetworkLayer[] Layers;
-//
-//	public float Step = 0.1F;
-//
-//	public void Awake()
-//	{
-//		Refresh();
-//	}
-//
-//	public void Refresh()
-//	{
-//		Points = GameObject.FindObjectsOfType<DATA_Point>();
-//
-//		var neurons = GameObject.FindObjectsOfType<SCR_Neuron>();
-//
-//		var numLayers = 0;
-//
-//		foreach (var neuron in neurons)
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+public class SCR_NeuralNetwork2D : MonoBehaviour 
+{
+	public float Step = 0.0005F;
+	public bool Converge = true;
+
+	public Unit[] Inputs;
+	public Unit Output;
+
+	public Unit[] AllUnits = new Unit[0];
+	public List<Layer> Layers = new List<Layer>();
+	DATA_Point[] Points;
+
+	public GameObject LayersContainer;
+	public GameObject Connection;
+
+	public void Awake()
+	{
+		Points = GameObject.FindObjectsOfType<DATA_Point>();
+		Layers = new List<Layer>();
+
+		SCR_Node[] lastNodes = null;
+
+		for (int i = 0; i < LayersContainer.transform.childCount; i++)
+		{
+			var obj = LayersContainer.transform.GetChild(i).gameObject;
+			var nodes = obj.GetComponentsInChildren<SCR_Node>();
+
+			if(lastNodes != null)
+			{
+				var t = 0F;
+				foreach (var left in lastNodes) 
+				{
+					t += 1F / (float) lastNodes.Length;
+					foreach (var right in nodes) 
+					{
+						var c = GameObject.Instantiate(Connection);
+						var connection = c.GetComponent<SCR_Node>();
+
+						connection.transform.position = Vector2.Lerp(left.transform.position, right.transform.position, 0.35F + t * 0.3F);
+//						connection.transform.parent = left.transform.parent;
+
+
+						connection.Input.Inputs.Add(left.Output);
+						right.Input.Inputs.Add(connection.Output);
+
+						left.SubLayers.AddRange(connection.SubLayers);
+					}
+				}
+			}
+
+			var l = new Layer();
+			l.Nodes.AddRange(nodes);
+			Layers.Add(l);
+
+			lastNodes = nodes;
+		}
+
+		AllUnits = GameObject.FindObjectsOfType<Unit>();
+
+		foreach (var item in AllUnits) 
+		{
+			if(item is Data)
+			{
+				item.Value = (Random.value - 0.5F);
+			}
+		}
+
+//		for (int i = 0; i < 100; i++) 
 //		{
-//			var length = neuron.Layer + 1;
+//			Layer layer = null;
 //
-//			if(length > numLayers)
+//			foreach (var item in AllUnits) 
 //			{
-//				numLayers = length;
-//			}
-//		}
-//
-//		Layers = new NeuralNetworkLayer[numLayers];
-//
-//		for (int i = 0; i < Layers.Length; i++)
-//		{
-//			Layers[i] = new NeuralNetworkLayer();
-//			Layers[i].Neurons = neurons.Where(_ => _.Layer == i).ToArray();
-//		}
-//	}
-//
-//	public void Update () 
-//	{
-//		foreach (var layer in Layers)
-//		{
-//			foreach (var neuron in layer.Neurons) 
-//			{
+//				if(item.Layer == i)
 //				{
-//					var lastCost = TotalSquaredDistance();
-//					var lastValue = neuron.Bias;
-//
-//					neuron.Bias += (Random.value - 0.5F) * Step;
-//
-//					var newCost = TotalSquaredDistance();
-//
-//					if(newCost > lastCost)
+//					if(layer == null)
 //					{
-//						neuron.Bias = lastValue;
+//						layer = new Layer();
+//						Layers.Add(layer);
 //					}
+//
+//					layer.Units.Add(item);
 //				}
-//
-//				for (int i = 0; i < neuron.PreviousWeights.Length; i++)
-//				{
-//					var lastCost = TotalSquaredDistance();
-//					var lastValue = neuron.PreviousWeights[i];
-//
-//					neuron.PreviousWeights[i] += (Random.value - 0.5F) * Step;
-//
-//					var newCost = TotalSquaredDistance();
-//
-//					if(newCost > lastCost)
-//					{
-//						neuron.PreviousWeights[i] = lastValue;
-//					}
-//				}
-//			}	
-//		}
-////		for (int p = 0; p < Points.Length; p++)
-////		{
-////			var point = Points[p];
-////
-//////			point.
-////
-//////			point.transform.position
-//////        	point.transform.position
-////		}
-//	}
-//
-//	public float TotalSquaredDistance()
-//	{
-//		float total = 0;
-//
-//		foreach (var point in Points)
-//		{
-//			var v = Evaulate(point.transform.position);
-//
-////			if(point.Type == PointType.Red)
-////			{
-////				t = -t;
-////			}
-//
-//			var t = point.Type == PointType.Red ? v.x : v.y;
-//
-//			total += t * t;
-//		}
-//
-//		return total;
-//	}
-//
-//	public Vector2 Evaulate(Vector2 p)
-//	{
-//		if(X)
-//		{
-//			X.Current = p.x;
-//		}
-//
-//		if(Y)
-//		{
-//			Y.Current = p.y;
-//		}
-//
-//		for (int l = 1; l < Layers.Length; l++) 
-//		{
-//			var layer = Layers[l];
-//
-//			for (int n = 0; n < layer.Neurons.Length; n++) 
+//			}
+
+//			if(layer == null)
 //			{
-//				var neuron = layer.Neurons[n];
-//
-//				neuron.Evaulate();
+//				break;
 //			}
 //		}
+	}
+
+	public void Update()
+	{
+		foreach (var item in Points) 
+		{
+			var target = item.Type == PointType.Red ? 1 : -1;
+			RunStep(target, item.transform.position.x, item.transform.position.y);
+		}
+	}
+
+	public void RunStep(double desiredOutput, params double[] inputs)
+	{
+		for (int i = 0; i < inputs.Length; i++) 
+		{
+			Inputs[i].Value = inputs[i];	
+		}
+//		Input.Value = input;
+
+		foreach (var layer in Layers) 
+		{
+			foreach (var unit in layer.Nodes) 
+			{
+				unit.Forward();
+			}
+		}
+
+		foreach (var item in AllUnits) 
+		{
+			item.Gradient = 0F;
+		}
+
+		Output.Gradient = desiredOutput - Output.Value;
+
+		for (int i = Layers.Count - 1; i >= 0; i--)
+		{
+			foreach (var unit in Layers[i].Nodes) 
+			{
+				unit.Backward();
+			}
+		}
+
+		if(Converge)
+		{
+			foreach (var item in AllUnits) 
+			{
+				if(item is Data)
+				{
+					item.Value += Step * item.Gradient;
+				}
+			}
+		}
+	}
+
+	public bool Preview = true;
+
+	public double Evaluate(params double[] inputs)
+	{
+		for (int i = 0; i < inputs.Length; i++) 
+		{
+			Inputs[i].Value = inputs[i];	
+		}
+
+		foreach (var layer in Layers) 
+		{
+			foreach (var unit in layer.Nodes) 
+			{
+				if(unit == null)
+				{
+					continue;
+				}
+
+				unit.Forward();
+			}
+		}
+
+		return Output.Value;
+	}
+
+	public void OnDrawGizmos()
+	{
+		if(!Preview)
+		{
+			return;
+		}
+		var iter = 32;
+		var xSize = 10F;
+		var ySize = 10F;
+
+		for (int x = 0; x < iter; x++) 
+		{
+			var xT = x / (float) iter;
+
+			for (int y = 0; y < iter; y++) 
+			{
+				var yT = y / (float) iter;
+
+				var p = new Vector2(xT * xSize, yT * ySize);
+
+				var v = Evaluate(p.x, p.y);
+
+				Gizmos.color = new Color((float) v, 1F, 1F - (float) v * 0.5F, 0.5F * Mathf.Clamp01(1F - (float) v));
+
+				Gizmos.DrawCube(new Vector3(p.x, p.y, 0), new Vector2(xSize / iter, ySize / iter));
+			}
+		}
+
+//		Gizmos.color = Color.yellow;
+//		Gizmos.DrawLine(Vector2.zero, new Vector2(100, 0));
 //
-//		return new Vector2(OutputRed.Current, OutputBlue.Current);
-//	}
-//
-//	public void OnValidate()
-//	{
-//		Refresh();
-//	}
-//
-//	const int GizmoIterations = 32;
-//	protected GizmoData[,] GizmoDatas = new GizmoData[GizmoIterations, GizmoIterations];
-//
-//	public void OnDrawGizmos()
-//	{
-//		const float area = 10;
-//
-//		var size = (area / (GizmoIterations - 1));
-//
-//		for (int x = 0; x < GizmoIterations; x++)
-//		{
-//			var xPos = -(x / (1F - (float) GizmoIterations)) * area;
-//
-//			for (int y = 0; y < GizmoIterations; y++)
-//			{
-//				var yPos = -(y / (1F - (float) GizmoIterations)) * area;
-//
-//				var p = new Vector2(xPos, yPos);
-//
-//				var t = Evaulate(p);
-//
-//
-//				GizmoDatas[x, y].Position = p;
-//				GizmoDatas[x, y].T = t;
-//			}
-//		}
-//
-//		var min = float.MaxValue;
-//		var max = float.MinValue;
-//
-////		print(min + " " + max);
-//
-//		foreach (var item in GizmoDatas) 
-//		{
-//			if(item.T.x < min)
-//			{
-//				min = item.T.x;
-//			}
-//			if(item.T.x > max)
-//			{
-//				max = item.T.x;
-//			}
-//		}
-//
-//		foreach (var item in GizmoDatas) 
-//		{
-//			Gizmos.color = Color.Lerp(Color.yellow, Color.blue, Mathf.InverseLerp(min, max, item.T.x));
-//
-//			Gizmos.DrawWireCube(item.Position, new Vector2(size, size));
-//		}
-//
-//
-//		// Line
 //		Gizmos.color = Color.white;
 //
-//		var iter = 128;
-//		var last = Vector2.zero;
-//
+//		var iter = 1000;
+//        var last = Vector2.zero;
+//		
 //		for (int i = 0; i < iter; i++) 
 //		{
 //			var t = i / (float) iter;
+//			
+//			var x = t * 20;
 //
-//			var x = t * 5;
+//			var y = Evaluate(x);
 //
-//			var y = Evaulate(new Vector2(x, 0)).x;
-//
-//			var p = new Vector2(x, y - 10);
-//
+//			var p = new Vector2(x, (float) y);
+//			
 //			if(i > 0)
 //			{
-//				Gizmos.DrawLine(last, p);
+//                Gizmos.DrawLine(last, p);
 //			}
-//
+//			
 //			last = p;
 //		}
-//	}
-//}
+	}
+}

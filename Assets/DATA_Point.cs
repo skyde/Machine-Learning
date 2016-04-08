@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public enum PointType
 {
@@ -31,7 +32,11 @@ public class DATA_Point : MonoBehaviour
 
 	public void OnDrawGizmos()
 	{
-		
+//		Gizmos.color = GetComponent<SpriteRenderer>().color;
+////		Gizmos.DrawWireSphere(transform.position, 0.2F);
+//
+//		Handles.SphereCap(-1, transform.position, Quaternion.identity, 0.2F);
+
 //		Gizmos.drawc
 	}
 }

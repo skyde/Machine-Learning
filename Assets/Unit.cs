@@ -90,7 +90,7 @@ public abstract class Unit : MonoBehaviour
 		Gizmos.color = new Color(0, 0, 0, 0);
 		Gizmos.DrawCube(transform.position, size);
 
-		Handles.Label(transform.position, 
+		Handles.Label((Vector2) transform.position - new Vector2(size.x - 0.5F, -size.y) * 0.5F, 
 			Identifier + "\nvalue " + Value.ToString("##.#####") + "\ngradient " + Gradient.ToString("##.#####"));
 //		Helpers.
 	}
